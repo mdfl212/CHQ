@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="day" data-ui="classic">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Community Health Center · Data-Gathering Questionnaire</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,500;1,8..60,300;1,8..60,400&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="css/base.css" />
+<link rel="stylesheet" href="css/shared.css" />
+<link rel="stylesheet" href="css/ui-classic.css" />
+<link rel="stylesheet" href="css/ui-guided.css" />
+</head>
+<body>
+
+<button class="mobile-menu-btn" id="mobileMenuBtn" type="button" aria-label="Menu">☰</button>
+
+<aside class="section-nav" id="sectionNav" aria-label="Section navigation">
+    <div class="nav-header">
+        <button class="nav-collapse" id="navCollapseBtn" type="button" title="Toggle sidebar">☰</button>
+        <span class="nav-brand">CHQ Form</span>
+    </div>
+    <div class="nav-progress">
+        <div class="nav-progress-label">
+            <span>Progress</span>
+            <span id="navProgressText">0 / 14</span>
+        </div>
+        <div class="nav-progress-track">
+            <div class="nav-progress-fill" id="navProgressFill"></div>
+        </div>
+    </div>
+    <nav class="nav-list" id="navList"></nav>
+    <div class="nav-footer">
+        <button type="button" class="nav-action theme-toggle" id="sidebarThemeBtn" title="Toggle light / dark mode">
+            <span class="nav-icon" id="sidebarThemeIcon">🌙</span>
+            <span class="nav-label" id="sidebarThemeLabel">Dark Mode</span>
+        </button>
+        <button type="button" class="nav-action" id="sidebarPrintBtn" title="Print / Save as PDF">
+            <span class="nav-icon">🖨</span>
+            <span class="nav-label">Print / PDF</span>
+        </button>
+        <button type="button" class="nav-action reset-action" id="sidebarResetBtn" title="Reset all fields">
+            <span class="nav-icon">🔄</span>
+            <span class="nav-label">Reset Form</span>
+        </button>
+    </div>
+</aside>
+<div class="nav-backdrop" id="navBackdrop"></div>
+
+<div class="app-shell">
+    <main class="app-main">
+        <div class="wrapper">
+
+            <header class="site-header">
+                <div>
+                    <div class="header-eyebrow">MD202 · Community &amp; Family Medicine</div>
+                    <h1 class="header-title"><em>Community Health Center</em><br>Data-Gathering Questionnaire</h1>
+                    <p class="header-sub">For Community Health Nursing Assessment &amp; Maglaya Health Problem Prioritization</p>
+                </div>
+                <div class="header-actions">
+                    <span class="save-pill" id="savePill" title="Progress is saved on this device">
+                        <span class="save-dot"></span><span id="saveText">Saved</span>
+                    </span>
+                    <button class="btn theme-toggle" id="themeToggleBtn" type="button">🌙 Night</button>
+                    <button class="btn ui-toggle" id="uiToggleBtn" type="button">▦ Guided UI</button>
+                    <button class="btn" type="button" onclick="window.print()">🖨 Print / PDF</button>
+                    <button class="btn blue" type="button" onclick="CHQ.docx.generate(event)">⬇ Generate DOCX</button>
+                    <button class="btn danger" type="button" onclick="CHQ.reset()">Reset</button>
+                </div>
+            </header>
+
+            <div class="toast" id="toast">
+                <span id="toastMsg">Ready</span>
+                <button class="toast-close" type="button" onclick="CHQ.hideToast()">✕</button>
+            </div>
+
+            <form id="chForm" autocomplete="off">
+
+                <!-- ─── § RESPONDENT ─── -->
+                <section class="form-section" data-section-id="s0" data-section-num="§" data-section-title="Respondent / Key Informant">
+                    <div class="form-section-title"><span class="num">§</span>Respondent / Key Informant <span class="badge">Identifier</span></div>
+                    <div class="form-row">
+                        <div class="form-group half"><label>Health Center / Barangay</label><input id="fCenter" placeholder="Name of health center / barangay" /></div>
+                        <div class="form-group half"><label>Purok / Sitio Covered</label><input id="fPurok" placeholder="Purok(s) / Sitio(s) covered" /></div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group full">
+                            <label>Respondent / Position</label>
+                            <div class="chip-group" data-field="respondent">
+                                <label class="chip"><input type="checkbox" value="BHW" />BHW</label>
+                                <label class="chip"><input type="checkbox" value="Midwife" />Midwife</label>
+                                <label class="chip"><input type="checkbox" value="Nurse" />Nurse</label>
+                                <label class="chip"><input type="checkbox" value="Physician" />Physician</label>
+                                <label class="chip"><input type="checkbox" value="Other" />Other:&nbsp;<input class="chip-other-input" data-other-for="respondent" placeholder="specify" /></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group full"><label>Date / Period Covered</label><input id="fPeriod" placeholder="e.g. January – December 2025" /></div>
+                    </div>
+                </section>
+
+                <!-- ─── I. COMMUNITY PROFILE ─── -->
+                <section class="form-section" data-section-id="s1" data-section-num="I." data-section-title="Community Profile">
+                    <div class="form-section-title"><span class="num">I.</span>Community Profile <span class="badge">Demographics</span></div>
+                    <div class="data-table-wrap">
+                        <table class="data-table">
+                            <thead><tr><th style="width:65%;">Indicator</th><th>Data</th></tr></thead>
+                            <tbody id="profileTableBody"></tbody>
+                        </table>
+                    </div>
+                    <div class="q"><span class="qn">1.</span> Are there particularly vulnerable groups in the community?</div>
+                    <div class="chip-group" data-field="vulnerableGroups">
+                        <label class="chip"><input type="checkbox" value="Children" />Children</label>
+                        <label class="chip"><input type="checkbox" value="Pregnant women" />Pregnant women</label>
+                        <label class="chip"><input type="checkbox" value="Older adults" />Older adults</label>
+                        <label class="chip"><input type="checkbox" value="Persons with disability" />Persons with disability</label>
+                        <label class="chip"><input type="checkbox" value="Low-income households" />Low-income households</label>
+                        <label class="chip"><input type="checkbox" value="Other" />Other:&nbsp;<input class="chip-other-input" data-other-for="vulnerableGroups" placeholder="specify" /></label>
+                    </div>
+                </section>
+
+                <!-- ─── II. GENERAL HEALTH STATUS ─── -->
+                <section class="form-section" data-section-id="s2" data-section-num="II." data-section-title="General Health Status">
+                    <div class="form-section-title"><span class="num">II.</span>General Health Status <span class="badge">Morbidity</span></div>
+                    <div class="q"><span class="qn">1.</span> Five most common reasons for consultation at the health center</div>
+                    <div class="data-table-wrap">
+                        <table class="data-table">
+                            <thead><tr><th style="width:60px;">Rank</th><th>Health problem / condition</th><th style="width:180px;">Approx. number of cases</th></tr></thead>
+                            <tbody>
+                                <tr><td class="num">1</td><td><input id="gh1" placeholder="Condition" /></td><td><input id="gh1n" type="number" placeholder="n" /></td></tr>
+                                <tr><td class="num">2</td><td><input id="gh2" placeholder="Condition" /></td><td><input id="gh2n" type="number" placeholder="n" /></td></tr>
+                                <tr><td class="num">3</td><td><input id="gh3" placeholder="Condition" /></td><td><input id="gh3n" type="number" placeholder="n" /></td></tr>
+                                <tr><td class="num">4</td><td><input id="gh4" placeholder="Condition" /></td><td><input id="gh4n" type="number" placeholder="n" /></td></tr>
+                                <tr><td class="num">5</td><td><input id="gh5" placeholder="Condition" /></td><td><input id="gh5n" type="number" placeholder="n" /></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="q"><span class="qn">2.</span> Compared with the previous year, are these problems:</div>
+                    <div class="chip-group" data-field="ghTrend">
+                        <label class="chip"><input type="radio" name="ghTrend" value="Increasing" />Increasing</label>
+                        <label class="chip"><input type="radio" name="ghTrend" value="Decreasing" />Decreasing</label>
+                        <label class="chip"><input type="radio" name="ghTrend" value="Relatively unchanged" />Relatively unchanged</label>
+                        <label class="chip"><input type="radio" name="ghTrend" value="Unknown" />Unknown</label>
+                    </div>
+                    <div class="q"><span class="qn">3.</span> Health problem affecting the greatest number of people</div>
+                    <textarea id="ghMost" rows="2" placeholder="Condition / description"></textarea>
+                    <div class="q"><span class="qn">4.</span> Health problem considered the most serious</div>
+                    <textarea id="ghSerious" rows="2" placeholder="Condition / rationale"></textarea>
+                </section>
+
+                <!-- ─── III. COMMUNICABLE DISEASES ─── -->
+                <section class="form-section" data-section-id="s3" data-section-num="III." data-section-title="Communicable Diseases">
+                    <div class="form-section-title"><span class="num">III.</span>Communicable Diseases <span class="badge">Surveillance</span></div>
+                    <div class="data-table-wrap">
+                        <table class="data-table">
+                            <thead><tr><th style="width:55%;">Disease / Condition</th><th style="width:15%;">Cases</th><th style="width:15%;">Increasing?</th><th style="width:15%;">Decreasing?</th></tr></thead>
+                            <tbody id="commTableBody"></tbody>
+                        </table>
+                    </div>
+                    <div class="q"><span class="qn">1.</span> Is there currently an outbreak or unusual increase in any communicable disease?</div>
+                    <div class="chip-group" data-field="outbreak">
+                        <label class="chip"><input type="radio" name="outbreak" value="Yes" />Yes</label>
+                        <label class="chip"><input type="radio" name="outbreak" value="No" />No</label>
+                    </div>
+                    <div class="form-row mt-8"><div class="form-group full"><label>If yes, specify</label><input id="outbreakDetail" placeholder="Disease / area / magnitude" /></div></div>
+                </section>
+
+                <!-- ─── IV. NCD ─── -->
+                <section class="form-section" data-section-id="s4" data-section-num="IV." data-section-title="Noncommunicable Diseases">
+                    <div class="form-section-title"><span class="num">IV.</span>Noncommunicable Diseases <span class="badge">NCD</span></div>
+                    <div class="data-table-wrap">
+                        <table class="data-table">
+                            <thead><tr><th style="width:60%;">Condition</th><th>Estimated / recorded cases</th></tr></thead>
+                            <tbody id="ncdTableBody"></tbody>
+                        </table>
+                    </div>
+                    <div class="q"><span class="qn">1.</span> Which NCD is the biggest concern in the community?</div>
+                    <textarea id="ncdConcern" rows="2" placeholder="Condition / rationale"></textarea>
+                    <div class="q"><span class="qn">2.</span> Are screening services available?</div>
+                    <div class="chip-group" data-field="ncdScreening">
+                        <label class="chip"><input type="checkbox" value="Blood pressure" />Blood pressure</label>
+                        <label class="chip"><input type="checkbox" value="Blood glucose" />Blood glucose</label>
+                        <label class="chip"><input type="checkbox" value="Cancer screening" />Cancer screening</label>
+                        <label class="chip"><input type="checkbox" value="Other" />Other:&nbsp;<input class="chip-other-input" data-other-for="ncdScreening" placeholder="specify" /></label>
+                    </div>
+                    <div class="q"><span class="qn">3.</span> Common risk factors observed</div>
+                    <div class="chip-group" data-field="ncdRisk">
+                        <label class="chip"><input type="checkbox" value="Smoking" />Smoking</label>
+                        <label class="chip"><input type="checkbox" value="Alcohol use" />Alcohol use</label>
+                        <label class="chip"><input type="checkbox" value="Physical inactivity" />Physical inactivity</label>
+                        <label class="chip"><input type="checkbox" value="Unhealthy diet" />Unhealthy diet</label>
+                        <label class="chip"><input type="checkbox" value="Obesity" />Obesity</label>
+                        <label class="chip"><input type="checkbox" value="Other" />Other:&nbsp;<input class="chip-other-input" data-other-for="ncdRisk" placeholder="specify" /></label>
+                    </div>
+                </section>
+
+                <!-- ─── V. MCH ─── -->
+                <section class="form-section" data-section-id="s5" data-section-num="V." data-section-title="Maternal & Child Health">
+                    <div class="form-section-title"><span class="num">V.</span>Maternal &amp; Child Health <span class="badge">MCH</span></div>
+                    <div class="data-table-wrap">
+                        <table class="data-table">
+                            <thead><tr><th style="width:70%;">Indicator</th><th>Number / Percentage</th></tr></thead>
+                            <tbody id="mchTableBody"></tbody>
+                        </table>
+                    </div>
+                    <div class="q"><span class="qn">1.</span> Common maternal / child health concerns</div>
+                    <div class="chip-group" data-field="mchConcerns">
+                        <label class="chip"><input type="checkbox" value="Teenage pregnancy" />Teenage pregnancy</label>
+                        <label class="chip"><input type="checkbox" value="High-risk pregnancy" />High-risk pregnancy</label>
+                        <label class="chip"><input type="checkbox" value="Inadequate prenatal care" />Inadequate prenatal care</label>
+                        <label class="chip"><input type="checkbox" value="Malnutrition" />Malnutrition</label>
+                        <label class="chip"><input type="checkbox" value="Incomplete immunization" />Incomplete immunization</label>
+                        <label class="chip"><input type="checkbox" value="Low birth weight" />Low birth weight</label>
+                        <label class="chip"><input type="checkbox" value="Other" />Other:&nbsp;<input class="chip-other-input" data-other-for="mchConcerns" placeholder="specify" /></label>
+                    </div>
+                </section>
+
+                <!-- ─── VI. IMMUNIZATION ─── -->
+                <section class="form-section" data-section-id="s6" data-section-num="VI." data-section-title="Immunization">
+                    <div class="form-section-title"><span class="num">VI.</span>Immunization <span class="badge">EPI</span></div>
+                    <div class="q"><span class="qn">1.</span> Current immunization status of children</div>
+                    <div class="chip-group" data-field="immStatus">
+                        <label class="chip"><input type="radio" name="immStatus" value="Generally adequate" />Generally adequate</label>
+                        <label class="chip"><input type="radio" name="immStatus" value="Some children incompletely immunized" />Some children incompletely immunized</label>
+                        <label class="chip"><input type="radio" name="immStatus" value="Many children incompletely immunized" />Many children incompletely immunized</label>
+                        <label class="chip"><input type="radio" name="immStatus" value="Unknown" />Unknown</label>
+                    </div>
+                    <div class="q"><span class="qn">2.</span> Common reasons for missed vaccinations</div>
+                    <div class="chip-group" data-field="immMissed">
+                        <label class="chip"><input type="checkbox" value="Lack of awareness" />Lack of awareness</label>
+                        <label class="chip"><input type="checkbox" value="Child was sick" />Child was sick</label>
+                        <label class="chip"><input type="checkbox" value="Parent/guardian refusal" />Parent/guardian refusal</label>
+                        <label class="chip"><input type="checkbox" value="Transportation/access" />Transportation/access</label>
+                        <label class="chip"><input type="checkbox" value="Vaccine unavailable" />Vaccine unavailable</label>
+                        <label class="chip"><input type="checkbox" value="Schedule conflict" />Schedule conflict</label>
+                        <label class="chip"><input type="checkbox" value="Other" />Other:&nbsp;<input class="chip-other-input" data-other-for="immMissed" placeholder="specify" /></label>
+                    </div>
+                </section>
+
+                <!-- ─── VII. NUTRITION ─── -->
+                <section class="form-section" data-section-id="s7" data-section-num="VII." data-section-title="Nutrition">
+                    <div class="form-section-title"><span class="num">VII.</span>Nutrition <span class="badge">Nutrition</span></div>
+                    <div class="q"><span class="qn">1.</span> Nutrition problems present</div>
+                    <div class="chip-group" data-field="nutProblems">
+                        <label class="chip"><input type="checkbox" value="Underweight" />Underweight</label>
+                        <label class="chip"><input type="checkbox" value="Wasting" />Wasting</label>
+                        <label class="chip"><input type="checkbox" value="Stunting" />Stunting</label>
+                        <label class="chip"><input type="checkbox" value="Overweight/obesity" />Overweight/obesity</label>
+                        <label class="chip"><input type="checkbox" value="Anemia" />Anemia</label>
+                        <label class="chip"><input type="checkbox" value="Food insecurity" />Food insecurity</label>
+                        <label class="chip"><input type="checkbox" value="Other" />Other:&nbsp;<input class="chip-other-input" data-other-for="nutProblems" placeholder="specify" /></label>
+                    </div>
+                    <div class="data-table-wrap mt-8">
+                        <table class="data-table">
+                            <thead><tr><th style="width:60%;">Condition</th><th>Number</th></tr></thead>
+                            <tbody>
+                                <tr><td class="row-label">Underweight</td><td><input id="nutUnder" type="number" placeholder="n" /></td></tr>
+                                <tr><td class="row-label">Wasted</td><td><input id="nutWasted" type="number" placeholder="n" /></td></tr>
+                                <tr><td class="row-label">Stunted</td><td><input id="nutStunted" type="number" placeholder="n" /></td></tr>
+                                <tr><td class="row-label">Overweight / obese</td><td><input id="nutOver" type="number" placeholder="n" /></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="q"><span class="qn">2.</span> Nutrition programs currently available</div>
+                    <div class="chip-group" data-field="nutPrograms">
+                        <label class="chip"><input type="checkbox" value="Feeding program" />Feeding program</label>
+                        <label class="chip"><input type="checkbox" value="Growth monitoring" />Growth monitoring</label>
+                        <label class="chip"><input type="checkbox" value="Vitamin supplementation" />Vitamin supplementation</label>
+                        <label class="chip"><input type="checkbox" value="Nutrition education" />Nutrition education</label>
+                        <label class="chip"><input type="checkbox" value="Iron supplementation" />Iron supplementation</label>
+                        <label class="chip"><input type="checkbox" value="Other" />Other:&nbsp;<input class="chip-other-input" data-other-for="nutPrograms" placeholder="specify" /></label>
+                    </div>
+                    <div class="q"><span class="qn">3.</span> Major nutrition concern in the community</div>
+                    <textarea id="nutConcern" rows="2" placeholder="Description"></textarea>
+                </section>
+
+                <!-- ─── VIII. WASH ─── -->
+                <section class="form-section" data-section-id="s8" data-section-num="VIII." data-section-title="Water, Sanitation & Environment">
+                    <div class="form-section-title"><span class="num">VIII.</span>Water, Sanitation &amp; Environment <span class="badge">WASH</span></div>
+                    <div class="q"><span class="qn">1.</span> Main water sources</div>
+                    <div class="chip-group" data-field="waterSources">
+                        <label class="chip"><input type="checkbox" value="Piped/community water" />Piped/community water</label>
+                        <label class="chip"><input type="checkbox" value="Deep well" />Deep well</label>
+                        <label class="chip"><input type="checkbox" value="Shallow well" />Shallow well</label>
+                        <label class="chip"><input type="checkbox" value="Spring" />Spring</label>
+                        <label class="chip"><input type="checkbox" value="River/stream" />River/stream</label>
+                        <label class="chip"><input type="checkbox" value="Other" />Other:&nbsp;<input class="chip-other-input" data-other-for="waterSources" placeholder="specify" /></label>
+                    </div>
+                    <div class="q"><span class="qn">2.</span> Major environmental concerns</div>
+                    <div class="chip-group" data-field="envConcerns">
+                        <label class="chip"><input type="checkbox" value="Unsafe drinking water" />Unsafe drinking water</label>
+                        <label class="chip"><input type="checkbox" value="Improper waste disposal" />Improper waste disposal</label>
+                        <label class="chip"><input type="checkbox" value="Poor drainage" />Poor drainage</label>
+                        <label class="chip"><input type="checkbox" value="Stagnant water" />Stagnant water</label>
+                        <label class="chip"><input type="checkbox" value="Flooding" />Flooding</label>
+                        <label class="chip"><input type="checkbox" value="Mosquito infestation" />Mosquito infestation</label>
+                        <label class="chip"><input type="checkbox" value="Rodents" />Rodents</label>
+                        <label class="chip"><input type="checkbox" value="Air pollution" />Air pollution</label>
+                        <label class="chip"><input type="checkbox" value="Open defecation" />Open defecation</label>
+                        <label class="chip"><input type="checkbox" value="Poor housing" />Poor housing</label>
+                        <label class="chip"><input type="checkbox" value="Other" />Other:&nbsp;<input class="chip-other-input" data-other-for="envConcerns" placeholder="specify" /></label>
+                    </div>
+                    <div class="q"><span class="qn">3.</span> Most concerning environmental problem</div>
+                    <textarea id="envMost" rows="2" placeholder="Description / rationale"></textarea>
+                    <div class="q"><span class="qn">4.</span> Are environmental health programs currently being implemented?</div>
+                    <div class="chip-group" data-field="envPrograms">
+                        <label class="chip"><input type="radio" name="envPrograms" value="Yes" />Yes</label>
+                        <label class="chip"><input type="radio" name="envPrograms" value="No" />No</label>
+                    </div>
+                </section>
+
+                <!-- ─── IX. MENTAL & SOCIAL ─── -->
+                <section class="form-section" data-section-id="s9" data-section-num="IX." data-section-title="Mental & Social Health">
+                    <div class="form-section-title"><span class="num">IX.</span>Mental &amp; Social Health <span class="badge">Psychosocial</span></div>
+                    <div class="q"><span class="qn">1.</span> Mental / social concerns observed or reported</div>
+                    <div class="chip-group" data-field="mentalConcerns">
+                        <label class="chip"><input type="checkbox" value="Stress/anxiety" />Stress/anxiety</label>
+                        <label class="chip"><input type="checkbox" value="Depression-related concerns" />Depression-related concerns</label>
+                        <label class="chip"><input type="checkbox" value="Substance use" />Substance use</label>
+                        <label class="chip"><input type="checkbox" value="Family conflict" />Family conflict</label>
+                        <label class="chip"><input type="checkbox" value="Domestic violence" />Domestic violence</label>
+                        <label class="chip"><input type="checkbox" value="Social isolation" />Social isolation</label>
+                        <label class="chip"><input type="checkbox" value="Suicide/self-harm concerns" />Suicide/self-harm concerns</label>
+                        <label class="chip"><input type="checkbox" value="Other" />Other:&nbsp;<input class="chip-other-input" data-other-for="mentalConcerns" placeholder="specify" /></label>
+                    </div>
+                    <div class="q"><span class="qn">2.</span> Are mental health services available?</div>
+                    <div class="chip-group" data-field="mentalServices">
+                        <label class="chip"><input type="radio" name="mentalServices" value="Yes" />Yes</label>
+                        <label class="chip"><input type="radio" name="mentalServices" value="No" />No</label>
+                        <label class="chip"><input type="radio" name="mentalServices" value="Limited" />Limited</label>
+                    </div>
+                    <div class="q"><span class="qn">3.</span> Major mental / social health concern</div>
+                    <textarea id="mentalMajor" rows="2" placeholder="Description"></textarea>
+                </section>
+
+                <!-- ─── X. SERVICES & RESOURCES ─── -->
+                <section class="form-section" data-section-id="s10" data-section-num="X." data-section-title="Health Services & Resources">
+                    <div class="form-section-title"><span class="num">X.</span>Health Services &amp; Resources <span class="badge">Capacity</span></div>
+                    <div class="q"><span class="qn">1.</span> Services available at the health center</div>
+                    <div class="chip-group" data-field="servicesAvail">
+                        <label class="chip"><input type="checkbox" value="Consultation" />Consultation</label>
+                        <label class="chip"><input type="checkbox" value="Maternal care" />Maternal care</label>
+                        <label class="chip"><input type="checkbox" value="Child health" />Child health</label>
+                        <label class="chip"><input type="checkbox" value="Immunization" />Immunization</label>
+                        <label class="chip"><input type="checkbox" value="TB program" />TB program</label>
+                        <label class="chip"><input type="checkbox" value="Nutrition services" />Nutrition services</label>
+                        <label class="chip"><input type="checkbox" value="NCD screening" />NCD screening</label>
+                        <label class="chip"><input type="checkbox" value="Health education" />Health education</label>
+                        <label class="chip"><input type="checkbox" value="Family planning" />Family planning</label>
+                        <label class="chip"><input type="checkbox" value="Emergency/first aid" />Emergency/first aid</label>
+                        <label class="chip"><input type="checkbox" value="Other" />Other:&nbsp;<input class="chip-other-input" data-other-for="servicesAvail" placeholder="specify" /></label>
+                    </div>
+                    <div class="q"><span class="qn">2.</span> Health personnel available</div>
+                    <textarea id="personnel" rows="2" placeholder="e.g. 1 MD (part-time), 1 RN, 2 MW, 8 BHWs"></textarea>
+                    <div class="q"><span class="qn">3.</span> Major resources lacking</div>
+                    <div class="chip-group" data-field="resourcesLacking">
+                        <label class="chip"><input type="checkbox" value="Personnel" />Personnel</label>
+                        <label class="chip"><input type="checkbox" value="Medicines" />Medicines</label>
+                        <label class="chip"><input type="checkbox" value="Vaccines" />Vaccines</label>
+                        <label class="chip"><input type="checkbox" value="Medical equipment" />Medical equipment</label>
+                        <label class="chip"><input type="checkbox" value="Laboratory services" />Laboratory services</label>
+                        <label class="chip"><input type="checkbox" value="Transportation/ambulance" />Transportation/ambulance</label>
+                        <label class="chip"><input type="checkbox" value="Funding" />Funding</label>
+                        <label class="chip"><input type="checkbox" value="Health education materials" />Health education materials</label>
+                        <label class="chip"><input type="checkbox" value="Other" />Other:&nbsp;<input class="chip-other-input" data-other-for="resourcesLacking" placeholder="specify" /></label>
+                    </div>
+                </section>
+
+                <!-- ─── XI. ACCESS ─── -->
+                <section class="form-section" data-section-id="s11" data-section-num="XI." data-section-title="Access to Healthcare">
+                    <div class="form-section-title"><span class="num">XI.</span>Access to Healthcare <span class="badge">Barriers</span></div>
+                    <div class="q"><span class="qn">1.</span> Major barriers to healthcare in this community</div>
+                    <div class="chip-group" data-field="barriers">
+                        <label class="chip"><input type="checkbox" value="Cost" />Cost</label>
+                        <label class="chip"><input type="checkbox" value="Transportation" />Transportation</label>
+                        <label class="chip"><input type="checkbox" value="Distance" />Distance</label>
+                        <label class="chip"><input type="checkbox" value="Lack of health personnel" />Lack of health personnel</label>
+                        <label class="chip"><input type="checkbox" value="Lack of medicines" />Lack of medicines</label>
+                        <label class="chip"><input type="checkbox" value="Lack of awareness" />Lack of awareness</label>
+                        <label class="chip"><input type="checkbox" value="Cultural beliefs/practices" />Cultural beliefs/practices</label>
+                        <label class="chip"><input type="checkbox" value="Self-medication" />Self-medication</label>
+                        <label class="chip"><input type="checkbox" value="Traditional medicine" />Traditional medicine</label>
+                        <label class="chip"><input type="checkbox" value="Other" />Other:&nbsp;<input class="chip-other-input" data-other-for="barriers" placeholder="specify" /></label>
+                    </div>
+                    <div class="q"><span class="qn">2.</span> Are patients commonly referred to other facilities?</div>
+                    <div class="chip-group" data-field="referrals">
+                        <label class="chip"><input type="radio" name="referrals" value="Yes" />Yes</label>
+                        <label class="chip"><input type="radio" name="referrals" value="No" />No</label>
+                    </div>
+                    <div class="form-row mt-8"><div class="form-group full"><label>If yes, common reasons</label><textarea id="referralReasons" rows="2" placeholder="e.g. need for laboratory work-up, specialist consult, surgical emergency"></textarea></div></div>
+                    <div class="q"><span class="qn">3.</span> Health services the community still needs</div>
+                    <textarea id="neededServices" rows="3" placeholder="List priority gaps / requests"></textarea>
+                </section>
+
+                <!-- ─── XII. PRIORITIES ─── -->
+                <section class="form-section" data-section-id="s12" data-section-num="XII." data-section-title="Health Center's Perception of Community Priorities">
+                    <div class="form-section-title"><span class="num">XII.</span>Health Center's Perception of Community Priorities <span class="badge">Priorities</span></div>
+                    <div class="q"><span class="qn">1.</span> Three most important health problems in the community</div>
+                    <textarea id="top3" rows="3" placeholder="1.&#10;2.&#10;3."></textarea>
+                    <div class="q"><span class="qn">2.</span> Which health problem affects the largest number of people?</div>
+                    <textarea id="affectsMost" rows="2" placeholder="Description"></textarea>
+                    <div class="q"><span class="qn">3.</span> Which health problem is most easily modified or addressed through community intervention?</div>
+                    <textarea id="mostModifiable" rows="2" placeholder="Description"></textarea>
+                    <div class="q"><span class="qn">4.</span> Which health problem has the greatest potential for prevention?</div>
+                    <textarea id="mostPreventable" rows="2" placeholder="Description"></textarea>
+                    <div class="q"><span class="qn">5.</span> Which health problem is considered an urgent community concern?</div>
+                    <textarea id="mostUrgent" rows="2" placeholder="Description"></textarea>
+                    <div class="q"><span class="qn">6.</span> Which health problem requires the most additional resources?</div>
+                    <textarea id="mostResource" rows="2" placeholder="Description"></textarea>
+                </section>
+
+                <!-- ─── XIII. MAGLAYA ─── -->
+                <section class="form-section" data-section-id="s13" data-section-num="XIII." data-section-title="Maglaya Health Problem Prioritization">
+                    <div class="form-section-title"><span class="num">XIII.</span>Maglaya Health Problem Prioritization Worksheet <span class="badge">Scoring</span></div>
+                    <div class="data-table-wrap">
+                        <table class="maglaya-table" id="maglayaTable">
+                            <thead>
+                                <tr>
+                                    <th style="width:20%;">Community Health Problem</th>
+                                    <th style="width:20%;">Evidence / Magnitude</th>
+                                    <th>Nature <span class="w">× 2</span></th>
+                                    <th>Magnitude <span class="w">× 1</span></th>
+                                    <th>Modifiability <span class="w">× 3</span></th>
+                                    <th>Preventive <span class="w">× 4</span></th>
+                                    <th>Social Concern <span class="w">× 5</span></th>
+                                    <th>Total <span class="w">/ 60</span></th>
+                                    <th style="width:36px;"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="maglayaBody"></tbody>
+                        </table>
+                    </div>
+                    <div class="form-row mt-8">
+                        <button type="button" class="btn primary" onclick="CHQ.maglaya.addRow()">+ Add Problem Row</button>
+                    </div>
+                    <div class="howto">
+                        <span class="icon">📐</span>
+                        <div>Score each criterion <strong>1–4</strong>. Total = <strong>(Nature × 2) + (Magnitude × 1) + (Modifiability × 3) + (Preventive × 4) + (Social × 5)</strong> — max <strong>60</strong>. Higher score = higher priority.</div>
+                    </div>
+                </section>
+
+            </form>
+
+            <div class="page-footer">
+                Community Health Nursing · Health Center Data-Gathering Questionnaire · MD202
+            </div>
+
+        </div>
+    </main>
+</div>
+
+<button class="scroll-top" id="scrollTopBtn" type="button" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<!-- Guided-mode floating actions -->
+<div class="guided-actions" id="guidedActions">
+    <div class="action-row">
+        <button type="button" class="circle-btn circle-back" id="guidedPrevBtn" title="Back" aria-label="Back">←</button>
+        <span class="action-label" id="guidedNextLabel">Proceed</span>
+        <button type="button" class="circle-btn circle-next" id="guidedNextBtn" title="Proceed" aria-label="Proceed">→</button>
+    </div>
+    <div class="action-row">
+        <button type="button" class="circle-btn circle-docx" onclick="CHQ.docx.generate(event)" title="Export DOCX" aria-label="Export DOCX">
+            <span class="docx-text">DOCX</span>
+        </button>
+    </div>
+</div>
+
+<script src="js/storage.js"></script>
+<script src="js/theme.js"></script>
+<script src="js/maglaya.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/docx.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

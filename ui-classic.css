@@ -1,0 +1,10 @@
+/* ─── Classic = full-width stacked sections ─── */
+
+[data-ui="classic"] .section-nav,
+[data-ui="classic"] .guided-actions,
+[data-ui="classic"] .mobile-menu-btn,
+[data-ui="classic"] .nav-backdrop { display: none !important; }
+
+[data-ui="classic"] .app-shell { display: block; }
+[data-ui="classic"] .form-section { display: block; }
+[data-ui="classic"] .guided-step-meta { display: none; }
