@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Community Health Center · Data-Gathering Questionnaire</title>
+<title>Brgy. Abilan Health Center · Community Health Questionnaire</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,500;1,8..60,300;1,8..60,400&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
 <style>
@@ -917,12 +917,12 @@ textarea { resize: vertical; min-height: 44px; font-size: 13px; line-height: 1.5
 <aside class="section-nav" id="sectionNav" aria-label="Section navigation">
     <div class="nav-header">
         <button class="nav-collapse" id="navCollapseBtn" type="button" title="Toggle sidebar">☰</button>
-        <span class="nav-brand">CHQ Form</span>
+        <span class="nav-brand">AbHC CHQ</span>
     </div>
     <div class="nav-progress">
         <div class="nav-progress-label">
             <span>Progress</span>
-            <span id="navProgressText">0 / 14</span>
+            <span id="navProgressText">0 / 13</span>
         </div>
         <div class="nav-progress-track">
             <div class="nav-progress-fill" id="navProgressFill"></div>
@@ -952,9 +952,9 @@ textarea { resize: vertical; min-height: 44px; font-size: 13px; line-height: 1.5
 
             <header class="site-header">
                 <div>
-                    <div class="header-eyebrow">MD202 · Community &amp; Family Medicine</div>
-                    <h1 class="header-title"><em>Community Health Center</em><br>Data-Gathering Questionnaire</h1>
-                    <p class="header-sub">For Community Health Nursing Assessment &amp; Maglaya Health Problem Prioritization</p>
+                    <div class="header-eyebrow">CSU SOM · Batch Atlas · Year Level 2 · MD202</div>
+                    <h1 class="header-title"><em>Brgy. Abilan Health Center</em><br>Community Health Questionnaire</h1>
+                    <p class="header-sub">Community Health Nursing Assessment · Data-Gathering Instrument</p>
                 </div>
                 <div class="header-actions">
                     <span class="save-pill" id="savePill" title="Progress is saved on this device">
@@ -979,7 +979,7 @@ textarea { resize: vertical; min-height: 44px; font-size: 13px; line-height: 1.5
                 <section class="form-section" data-section-id="s0" data-section-num="§" data-section-title="Respondent / Key Informant">
                     <div class="form-section-title"><span class="num">§</span>Respondent / Key Informant <span class="badge">Identifier</span></div>
                     <div class="form-row">
-                        <div class="form-group half"><label>Health Center / Barangay</label><input id="fCenter" placeholder="Name of health center / barangay" /></div>
+                        <div class="form-group half"><label>Health Center / Barangay</label><input id="fCenter" value="Brgy. Abilan Health Center" /></div>
                         <div class="form-group half"><label>Purok / Sitio Covered</label><input id="fPurok" placeholder="Purok(s) / Sitio(s) covered" /></div>
                     </div>
                     <div class="form-row">
@@ -1293,8 +1293,8 @@ textarea { resize: vertical; min-height: 44px; font-size: 13px; line-height: 1.5
                 </section>
 
                 <!-- ─── XII. PRIORITIES ─── -->
-                <section class="form-section" data-section-id="s12" data-section-num="XII." data-section-title="Health Center's Perception of Community Priorities">
-                    <div class="form-section-title"><span class="num">XII.</span>Health Center's Perception of Community Priorities <span class="badge">Priorities</span></div>
+                <section class="form-section" data-section-id="s12" data-section-num="XII." data-section-title="Community Health Priorities">
+                    <div class="form-section-title"><span class="num">XII.</span>Community Health Priorities <span class="badge">Priorities</span></div>
                     <div class="q"><span class="qn">1.</span> Three most important health problems in the community</div>
                     <textarea id="top3" rows="3" placeholder="1.&#10;2.&#10;3."></textarea>
                     <div class="q"><span class="qn">2.</span> Which health problem affects the largest number of people?</div>
@@ -1307,42 +1307,14 @@ textarea { resize: vertical; min-height: 44px; font-size: 13px; line-height: 1.5
                     <textarea id="mostUrgent" rows="2" placeholder="Description"></textarea>
                     <div class="q"><span class="qn">6.</span> Which health problem requires the most additional resources?</div>
                     <textarea id="mostResource" rows="2" placeholder="Description"></textarea>
-                </section>
-
-                <!-- ─── XIII. MAGLAYA ─── -->
-                <section class="form-section" data-section-id="s13" data-section-num="XIII." data-section-title="Maglaya Health Problem Prioritization">
-                    <div class="form-section-title"><span class="num">XIII.</span>Maglaya Health Problem Prioritization Worksheet <span class="badge">Scoring</span></div>
-                    <div class="data-table-wrap">
-                        <table class="maglaya-table" id="maglayaTable">
-                            <thead>
-                                <tr>
-                                    <th style="width:20%;">Community Health Problem</th>
-                                    <th style="width:20%;">Evidence / Magnitude</th>
-                                    <th>Nature <span class="w">× 2</span></th>
-                                    <th>Magnitude <span class="w">× 1</span></th>
-                                    <th>Modifiability <span class="w">× 3</span></th>
-                                    <th>Preventive <span class="w">× 4</span></th>
-                                    <th>Social Concern <span class="w">× 5</span></th>
-                                    <th>Total <span class="w">/ 60</span></th>
-                                    <th style="width:36px;"></th>
-                                </tr>
-                            </thead>
-                            <tbody id="maglayaBody"></tbody>
-                        </table>
-                    </div>
-                    <div class="form-row mt-8">
-                        <button type="button" class="btn primary" onclick="CHQ.maglaya.addRow()">+ Add Problem Row</button>
-                    </div>
-                    <div class="howto">
-                        <span class="icon">📐</span>
-                        <div>Score each criterion <strong>1–4</strong>. Total = <strong>(Nature × 2) + (Magnitude × 1) + (Modifiability × 3) + (Preventive × 4) + (Social × 5)</strong> — max <strong>60</strong>. Higher score = higher priority.</div>
-                    </div>
+                    <div class="q"><span class="qn">7.</span> Additional notes / observations</div>
+                    <textarea id="additionalNotes" rows="3" placeholder="Any other relevant community health observations"></textarea>
                 </section>
 
             </form>
 
             <div class="page-footer">
-                Community Health Nursing · Health Center Data-Gathering Questionnaire · MD202
+                CSU SOM · Batch Atlas · Year Level 2 · MD202 · Brgy. Abilan Health Center
             </div>
 
         </div>
@@ -1374,374 +1346,150 @@ window.CHQ = window.CHQ || {};
     const UI_KEY    = 'chq:ui:v1';
     const THEME_KEY = 'chq:theme:v1';
 
-    // ─── Serialize the entire form to a plain object ───
     function serialize() {
         const data = {};
-
-        // text / number / date / textarea (by id)
         document.querySelectorAll(
             '#chForm input[id]:not([type=checkbox]):not([type=radio]), #chForm textarea[id]'
-        ).forEach(el => {
-            data[el.id] = el.value;
-        });
-
-        // chip groups (by data-field)
+        ).forEach(el => { data[el.id] = el.value; });
         document.querySelectorAll('.chip-group[data-field]').forEach(wrap => {
             const field = wrap.dataset.field;
             const values = [];
-            wrap.querySelectorAll('input[type=checkbox]:checked, input[type=radio]:checked').forEach(inp => {
-                values.push(inp.value);
-            });
+            wrap.querySelectorAll('input[type=checkbox]:checked, input[type=radio]:checked').forEach(inp => { values.push(inp.value); });
             data[field] = values;
             const other = wrap.querySelector('.chip-other-input');
             if (other) data[field + '__other'] = other.value;
         });
-
-        // Maglaya rows
-        data.__maglaya = window.CHQ.maglaya
-            ? window.CHQ.maglaya.getRows()
-            : [];
-
         return data;
     }
 
-    // ─── Apply a serialized object back to the form ───
     function deserialize(data) {
         if (!data || typeof data !== 'object') return;
-
         Object.entries(data).forEach(([key, value]) => {
-            if (key === '__maglaya') return;
             if (key.endsWith('__other')) return;
             const el = document.getElementById(key);
             if (!el) return;
             if (el.type === 'checkbox' || el.type === 'radio') return;
-            if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
-                el.value = value == null ? '' : value;
-            }
+            if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') el.value = value == null ? '' : value;
         });
-
         document.querySelectorAll('.chip-group[data-field]').forEach(wrap => {
             const field = wrap.dataset.field;
             const values = Array.isArray(data[field]) ? data[field] : [];
-            wrap.querySelectorAll('input[type=checkbox], input[type=radio]').forEach(inp => {
-                inp.checked = values.includes(inp.value);
-            });
+            wrap.querySelectorAll('input[type=checkbox], input[type=radio]').forEach(inp => { inp.checked = values.includes(inp.value); });
             const other = wrap.querySelector('.chip-other-input');
             if (other) other.value = data[field + '__other'] || '';
         });
-
-        if (window.CHQ.maglaya && Array.isArray(data.__maglaya)) {
-            window.CHQ.maglaya.setRows(data.__maglaya);
-        }
     }
 
-    // ─── Save / load / clear state ───
     function saveNow() {
         try {
-            const data = serialize();
-            localStorage.setItem(STATE_KEY, JSON.stringify(data));
+            localStorage.setItem(STATE_KEY, JSON.stringify(serialize()));
             localStorage.setItem(META_KEY, JSON.stringify({ savedAt: Date.now() }));
             return true;
-        } catch (e) {
-            console.warn('[CHQ] save failed', e);
-            return false;
-        }
+        } catch (e) { return false; }
     }
 
     function load() {
-        try {
-            const raw = localStorage.getItem(STATE_KEY);
-            return raw ? JSON.parse(raw) : null;
-        } catch (e) {
-            console.warn('[CHQ] load failed', e);
-            return null;
-        }
+        try { const raw = localStorage.getItem(STATE_KEY); return raw ? JSON.parse(raw) : null; }
+        catch (e) { return null; }
     }
 
     function clear() {
-        try {
-            localStorage.removeItem(STATE_KEY);
-            localStorage.removeItem(META_KEY);
-        } catch (e) { /* ignore */ }
+        try { localStorage.removeItem(STATE_KEY); localStorage.removeItem(META_KEY); } catch (e) {}
     }
 
-    function lastSavedAt() {
-        try {
-            const raw = localStorage.getItem(META_KEY);
-            if (!raw) return null;
-            return JSON.parse(raw).savedAt || null;
-        } catch { return null; }
-    }
+    function getPref(key, fallback) { try { return localStorage.getItem(key) || fallback; } catch { return fallback; } }
+    function setPref(key, value) { try { localStorage.setItem(key, value); } catch {} }
 
-    // ─── Preference helpers ───
-    function getPref(key, fallback) {
-        try { return localStorage.getItem(key) || fallback; }
-        catch { return fallback; }
-    }
-    function setPref(key, value) {
-        try { localStorage.setItem(key, value); } catch { /* ignore */ }
-    }
-
-    window.CHQ.storage = {
-        serialize, deserialize,
-        saveNow, load, clear, lastSavedAt,
-        getPref, setPref,
-        STATE_KEY, META_KEY, UI_KEY, THEME_KEY
-    };
-})();window.CHQ = window.CHQ || {};
+    window.CHQ.storage = { serialize, deserialize, saveNow, load, clear, getPref, setPref, STATE_KEY, META_KEY, UI_KEY, THEME_KEY };
+})();
 
 (function () {
     const { getPref, setPref, THEME_KEY } = window.CHQ.storage;
-
     function apply(theme) {
         document.documentElement.setAttribute('data-theme', theme);
-
-        // Header toggle
         const btn = document.getElementById('themeToggleBtn');
         if (btn) btn.textContent = theme === 'night' ? '☀ Day' : '🌙 Night';
-
-        // Sidebar toggle (guided mode)
         const sIcon = document.getElementById('sidebarThemeIcon');
         const sLabel = document.getElementById('sidebarThemeLabel');
-        if (sIcon)   sIcon.textContent   = theme === 'night' ? '☀' : '🌙';
-        if (sLabel)  sLabel.textContent  = theme === 'night' ? 'Light Mode' : 'Dark Mode';
+        if (sIcon) sIcon.textContent = theme === 'night' ? '☀' : '🌙';
+        if (sLabel) sLabel.textContent = theme === 'night' ? 'Light Mode' : 'Dark Mode';
     }
-
     function toggle() {
         const current = document.documentElement.getAttribute('data-theme') || 'day';
         const next = current === 'night' ? 'day' : 'night';
-        apply(next);
-        setPref(THEME_KEY, next);
+        apply(next); setPref(THEME_KEY, next);
     }
-
     function init() {
-        const saved = getPref(THEME_KEY, 'day');
-        apply(saved);
-
+        apply(getPref(THEME_KEY, 'day'));
         const btn = document.getElementById('themeToggleBtn');
         if (btn) btn.addEventListener('click', toggle);
-
         const sbBtn = document.getElementById('sidebarThemeBtn');
         if (sbBtn) sbBtn.addEventListener('click', toggle);
     }
-
     window.CHQ.theme = { init, apply, toggle };
-})();window.CHQ = window.CHQ || {};
-
-(function () {
-    let rowCounter = 0;
-
-    function makeRow() {
-        const tr = document.createElement('tr');
-        tr.dataset.rowId = 'mg' + (rowCounter++);
-        tr.innerHTML = `
-            <td class="problem-cell"><input type="text" class="mg-problem" placeholder="Problem" /></td>
-            <td class="evidence-cell"><input type="text" class="mg-evidence" placeholder="Evidence / magnitude data" /></td>
-            <td class="score-cell"><input type="number" min="1" max="4" class="mg-score mg-nature" /></td>
-            <td class="score-cell"><input type="number" min="1" max="4" class="mg-score mg-magnitude" /></td>
-            <td class="score-cell"><input type="number" min="1" max="4" class="mg-score mg-modif" /></td>
-            <td class="score-cell"><input type="number" min="1" max="4" class="mg-score mg-prev" /></td>
-            <td class="score-cell"><input type="number" min="1" max="4" class="mg-score mg-social" /></td>
-            <td class="total-cell mg-total">—</td>
-            <td><button type="button" class="remove-row" title="Remove row">✕</button></td>
-        `;
-        return tr;
-    }
-
-    function bindRow(tr) {
-        tr.querySelectorAll('.mg-score').forEach(inp => {
-            inp.addEventListener('input', () => {
-                const v = parseInt(inp.value, 10);
-                if (inp.value !== '') {
-                    if (isNaN(v) || v < 1) inp.value = 1;
-                    else if (v > 4) inp.value = 4;
-                }
-                updateTotal(tr);
-            });
-        });
-        tr.querySelector('.remove-row').addEventListener('click', () => {
-            const tb = document.getElementById('maglayaBody');
-            if (tb.rows.length > 1) {
-                tr.remove();
-            } else {
-                tr.querySelectorAll('input').forEach(i => { i.value = ''; });
-                updateTotal(tr);
-            }
-            window.CHQ.onChange && window.CHQ.onChange();
-        });
-    }
-
-    function updateTotal(tr) {
-        const n  = parseInt(tr.querySelector('.mg-nature').value) || 0;
-        const m  = parseInt(tr.querySelector('.mg-magnitude').value) || 0;
-        const mo = parseInt(tr.querySelector('.mg-modif').value) || 0;
-        const p  = parseInt(tr.querySelector('.mg-prev').value) || 0;
-        const s  = parseInt(tr.querySelector('.mg-social').value) || 0;
-        const total = (n * 2) + (m * 1) + (mo * 3) + (p * 4) + (s * 5);
-        tr.querySelector('.mg-total').textContent = total > 0 ? total : '—';
-    }
-
-    function addRow(data) {
-        const tb = document.getElementById('maglayaBody');
-        if (!tb) return;
-        const tr = makeRow();
-        tb.appendChild(tr);
-        if (data) {
-            tr.querySelector('.mg-problem').value = data.problem || '';
-            tr.querySelector('.mg-evidence').value = data.evidence || '';
-            tr.querySelector('.mg-nature').value = data.nature || '';
-            tr.querySelector('.mg-magnitude').value = data.magnitude || '';
-            tr.querySelector('.mg-modif').value = data.modif || '';
-            tr.querySelector('.mg-prev').value = data.prev || '';
-            tr.querySelector('.mg-social').value = data.social || '';
-            updateTotal(tr);
-        }
-        bindRow(tr);
-        return tr;
-    }
-
-    function reset(seed) {
-        const tb = document.getElementById('maglayaBody');
-        if (!tb) return;
-        tb.innerHTML = '';
-        rowCounter = 0;
-        const n = typeof seed === 'number' ? seed : 5;
-        for (let i = 0; i < n; i++) addRow();
-    }
-
-    function getRows() {
-        const rows = [];
-        document.querySelectorAll('#maglayaBody tr').forEach(tr => {
-            const row = {
-                problem: tr.querySelector('.mg-problem').value,
-                evidence: tr.querySelector('.mg-evidence').value,
-                nature: tr.querySelector('.mg-nature').value,
-                magnitude: tr.querySelector('.mg-magnitude').value,
-                modif: tr.querySelector('.mg-modif').value,
-                prev: tr.querySelector('.mg-prev').value,
-                social: tr.querySelector('.mg-social').value
-            };
-            if (Object.values(row).some(v => v && String(v).trim() !== '')) {
-                rows.push(row);
-            }
-        });
-        return rows;
-    }
-
-    function setRows(rows) {
-        const tb = document.getElementById('maglayaBody');
-        if (!tb) return;
-        tb.innerHTML = '';
-        rowCounter = 0;
-        if (!Array.isArray(rows) || rows.length === 0) {
-            for (let i = 0; i < 5; i++) addRow();
-            return;
-        }
-        rows.forEach(r => addRow(r));
-    }
-
-    function init() {
-        reset(5);
-    }
-
-    window.CHQ.maglaya = { init, addRow, reset, getRows, setRows };
-})();window.CHQ = window.CHQ || {};
+})();
 
 (function () {
     const { getPref, setPref, UI_KEY } = window.CHQ.storage;
-
     const STEP_ICONS = {
-        s0: '📋', s1: '👥', s2: '📊', s3: '🦠', s4: '💊',
-        s5: '🤱', s6: '💉', s7: '🍎', s8: '💧', s9: '🧠',
-        s10: '🏥', s11: '🚪', s12: '🎯', s13: '📐'
+        s0:'📋', s1:'👥', s2:'📊', s3:'🦠', s4:'💊',
+        s5:'🤱', s6:'💉', s7:'🍎', s8:'💧', s9:'🧠',
+        s10:'🏥', s11:'🚪', s12:'🎯'
     };
-
     let activeId = null;
+    function getSections() { return Array.from(document.querySelectorAll('.form-section[data-section-id]')); }
+    function escapeHtml(s) { return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
-    function getSections() {
-        return Array.from(document.querySelectorAll('.form-section[data-section-id]'));
-    }
-
-    function escapeHtml(s) {
-        return String(s == null ? '' : s)
-            .replace(/&/g, '&amp;').replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-    }
-
-    // ─── Build sidebar nav items ───
     function buildNav() {
         const navList = document.getElementById('navList');
         if (!navList) return;
-        const sections = getSections();
-        navList.innerHTML = sections.map((s, i) => {
+        navList.innerHTML = getSections().map((s, i) => {
             const id = s.dataset.sectionId;
-            const num = s.dataset.sectionNum || (i + 1);
+            const num = s.dataset.sectionNum || (i+1);
             const title = s.dataset.sectionTitle || '';
             const icon = STEP_ICONS[id] || '•';
-            return `
-                <button type="button" class="nav-item" data-target="${id}">
-                    <span class="nav-num">${escapeHtml(num)}</span>
-                    <span class="nav-icon">${icon}</span>
-                    <span class="nav-label">${escapeHtml(title)}</span>
-                </button>
-            `;
+            return `<button type="button" class="nav-item" data-target="${id}"><span class="nav-num">${escapeHtml(num)}</span><span class="nav-icon">${icon}</span><span class="nav-label">${escapeHtml(title)}</span></button>`;
         }).join('');
-
         navList.querySelectorAll('.nav-item').forEach(btn => {
-            btn.addEventListener('click', () => {
-                activate(btn.dataset.target);
-                if (window.innerWidth <= 900) closeMobileNav();
-            });
+            btn.addEventListener('click', () => { activate(btn.dataset.target); if (window.innerWidth <= 900) closeMobileNav(); });
         });
     }
 
-    // ─── Add step counter to section titles (guided mode only) ───
     function ensureStepMeta() {
         const sections = getSections();
-        const total = sections.length;
         sections.forEach((sec, i) => {
             const titleEl = sec.querySelector('.form-section-title');
             if (!titleEl || titleEl.dataset.stepEnhanced) return;
             titleEl.dataset.stepEnhanced = '1';
             const counter = document.createElement('span');
             counter.className = 'step-counter';
-            counter.textContent = `${i + 1} / ${total}`;
+            counter.textContent = `${i+1} / ${sections.length}`;
             titleEl.appendChild(counter);
         });
     }
 
-    // ─── Activate a section ───
     function activate(id) {
         const sections = getSections();
         if (!sections.some(s => s.dataset.sectionId === id)) return;
         activeId = id;
         sections.forEach(s => s.classList.toggle('active', s.dataset.sectionId === id));
-        document.querySelectorAll('.nav-item').forEach(btn => {
-            btn.classList.toggle('active', btn.dataset.target === id);
-        });
+        document.querySelectorAll('.nav-item').forEach(btn => btn.classList.toggle('active', btn.dataset.target === id));
         updateFloatingActions();
-        if (document.documentElement.getAttribute('data-ui') === 'guided') {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
+        if (document.documentElement.getAttribute('data-ui') === 'guided') window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function next() {
         const sections = getSections();
         const idx = sections.findIndex(s => s.dataset.sectionId === activeId);
-        if (idx >= 0 && idx < sections.length - 1) {
-            activate(sections[idx + 1].dataset.sectionId);
-        } else if (idx === sections.length - 1) {
-            window.CHQ.showToast('✅ All sections visited — click DOCX to export.', 4000);
-        }
+        if (idx >= 0 && idx < sections.length - 1) activate(sections[idx+1].dataset.sectionId);
+        else if (idx === sections.length - 1) window.CHQ.showToast('✅ All sections visited — click DOCX to export.', 4000);
     }
-
     function prev() {
         const sections = getSections();
         const idx = sections.findIndex(s => s.dataset.sectionId === activeId);
-        if (idx > 0) activate(sections[idx - 1].dataset.sectionId);
+        if (idx > 0) activate(sections[idx-1].dataset.sectionId);
     }
 
-    // ─── Floating action buttons ───
     function updateFloatingActions() {
         const sections = getSections();
         const idx = sections.findIndex(s => s.dataset.sectionId === activeId);
@@ -1749,35 +1497,23 @@ window.CHQ = window.CHQ || {};
         const nextBtn = document.getElementById('guidedNextBtn');
         const label = document.getElementById('guidedNextLabel');
         if (!prevBtn || !nextBtn || !label) return;
-
         prevBtn.disabled = idx <= 0;
-
         if (idx >= 0 && idx < sections.length - 1) {
-            label.textContent = `Proceed to ${sections[idx + 1].dataset.sectionTitle || 'next'}`;
-            nextBtn.classList.remove('complete');
-            nextBtn.textContent = '→';
+            label.textContent = `Proceed to ${sections[idx+1].dataset.sectionTitle || 'next'}`;
+            nextBtn.classList.remove('complete'); nextBtn.textContent = '→';
         } else {
             label.textContent = 'All sections complete — Export DOCX';
-            nextBtn.classList.add('complete');
-            nextBtn.textContent = '✓';
+            nextBtn.classList.add('complete'); nextBtn.textContent = '✓';
         }
     }
 
-    // ─── Is a section filled? ───
     function isSectionFilled(section) {
-        const inputs = section.querySelectorAll(
-            'input[type="text"], input[type="number"], input[type="date"], textarea'
-        );
-        for (const el of inputs) {
-            if (el.value && el.value.trim() !== '') return true;
-        }
+        const inputs = section.querySelectorAll('input[type="text"], input[type="number"], input[type="date"], textarea');
+        for (const el of inputs) if (el.value && el.value.trim() !== '') return true;
         if (section.querySelector('.chip-group input:checked')) return true;
-        const mg = section.querySelectorAll('.mg-problem, .mg-evidence');
-        for (const el of mg) if (el.value && el.value.trim() !== '') return true;
         return false;
     }
 
-    // ─── Progress bar + filled indicators ───
     function refreshProgress() {
         const sections = getSections();
         let filled = 0;
@@ -1794,34 +1530,20 @@ window.CHQ = window.CHQ || {};
         if (text) text.textContent = `${filled} / ${sections.length}`;
     }
 
-    // ─── Sidebar collapse ───
     function toggleSidebarCollapse() {
-        const html = document.documentElement;
-        const isCollapsed = html.classList.toggle('guided-sb-collapsed');
+        const isCollapsed = document.documentElement.classList.toggle('guided-sb-collapsed');
         setPref('chq:sidebar:v1', isCollapsed ? 'collapsed' : 'expanded');
     }
+    function openMobileNav() { document.documentElement.classList.add('nav-mobile-open'); }
+    function closeMobileNav() { document.documentElement.classList.remove('nav-mobile-open'); }
 
-    // ─── Mobile nav ───
-    function openMobileNav() {
-        document.documentElement.classList.add('nav-mobile-open');
-    }
-    function closeMobileNav() {
-        document.documentElement.classList.remove('nav-mobile-open');
-    }
-
-    // ─── UI mode switching ───
     function applyMode(mode) {
         document.documentElement.setAttribute('data-ui', mode);
-
         const btn = document.getElementById('uiToggleBtn');
         if (btn) btn.textContent = mode === 'guided' ? '▤ Classic UI' : '▦ Guided UI';
-
         if (mode === 'guided') {
             ensureStepMeta();
-            if (!activeId) {
-                const first = getSections()[0];
-                if (first) activeId = first.dataset.sectionId;
-            }
+            if (!activeId) { const first = getSections()[0]; if (first) activeId = first.dataset.sectionId; }
             activate(activeId);
         }
         refreshProgress();
@@ -1830,85 +1552,145 @@ window.CHQ = window.CHQ || {};
     function toggleMode() {
         const current = document.documentElement.getAttribute('data-ui') || 'classic';
         const next = current === 'guided' ? 'classic' : 'guided';
-        applyMode(next);
-        setPref(UI_KEY, next);
-
-        if (next === 'guided') {
-            window.CHQ.showToast('Guided mode active. Your data is untouched.', 3000);
-        }
+        applyMode(next); setPref(UI_KEY, next);
+        if (next === 'guided') window.CHQ.showToast('Guided mode active. Your data is untouched.', 3000);
     }
 
-    // ─── Init ───
     function init() {
-        buildNav();
-        ensureStepMeta();
-
-        // Restore sidebar collapse state
+        buildNav(); ensureStepMeta();
         const sbState = getPref('chq:sidebar:v1', 'expanded');
-        if (sbState === 'collapsed') {
-            document.documentElement.classList.add('guided-sb-collapsed');
-        }
-
-        const saved = getPref(UI_KEY, 'classic');
-        applyMode(saved);
-
-        // Header UI toggle
+        if (sbState === 'collapsed') document.documentElement.classList.add('guided-sb-collapsed');
+        applyMode(getPref(UI_KEY, 'classic'));
         const uiBtn = document.getElementById('uiToggleBtn');
         if (uiBtn) uiBtn.addEventListener('click', toggleMode);
-
-        // Sidebar collapse button
         const collapseBtn = document.getElementById('navCollapseBtn');
         if (collapseBtn) collapseBtn.addEventListener('click', toggleSidebarCollapse);
-
-        // Sidebar print button
         const printBtn = document.getElementById('sidebarPrintBtn');
         if (printBtn) printBtn.addEventListener('click', () => window.print());
-
-        // Sidebar reset button
         const resetBtn = document.getElementById('sidebarResetBtn');
         if (resetBtn) resetBtn.addEventListener('click', () => window.CHQ.reset());
-
-        // Mobile menu button
         const mobBtn = document.getElementById('mobileMenuBtn');
         if (mobBtn) mobBtn.addEventListener('click', openMobileNav);
-
-        // Backdrop click closes mobile nav
         const backdrop = document.getElementById('navBackdrop');
         if (backdrop) backdrop.addEventListener('click', closeMobileNav);
-
-        // Floating actions
         const gPrev = document.getElementById('guidedPrevBtn');
         const gNext = document.getElementById('guidedNextBtn');
         if (gPrev) gPrev.addEventListener('click', prev);
         if (gNext) gNext.addEventListener('click', next);
-
-        // Keyboard shortcuts (guided mode only)
         document.addEventListener('keydown', e => {
             if (document.documentElement.getAttribute('data-ui') !== 'guided') return;
             const tag = (e.target.tagName || '').toLowerCase();
             if (tag === 'input' || tag === 'textarea' || tag === 'select') return;
             if (e.key === 'ArrowRight') { next(); e.preventDefault(); }
-            if (e.key === 'ArrowLeft')  { prev(); e.preventDefault(); }
-            if (e.key === 'Escape')     { closeMobileNav(); }
+            if (e.key === 'ArrowLeft') { prev(); e.preventDefault(); }
+            if (e.key === 'Escape') closeMobileNav();
         });
-
         refreshProgress();
     }
 
-    window.CHQ.ui = {
-        init, applyMode, toggleMode,
-        activate, next, prev,
-        refreshProgress, updateFloatingActions,
-        openMobileNav, closeMobileNav
-    };
-})();window.CHQ = window.CHQ || {};
+    window.CHQ.ui = { init, applyMode, toggleMode, activate, next, prev, refreshProgress, updateFloatingActions, openMobileNav, closeMobileNav };
+})();
 
 (function () {
-    // ─── XML helpers ───
+    let toastTimer = null;
+    function showToast(msg, duration = 3500) {
+        const el = document.getElementById('toast');
+        const text = document.getElementById('toastMsg');
+        if (!el || !text) return;
+        text.textContent = msg; el.classList.add('show');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => el.classList.remove('show'), duration);
+    }
+    function hideToast() { const el = document.getElementById('toast'); if (el) el.classList.remove('show'); clearTimeout(toastTimer); }
+    window.CHQ.showToast = showToast;
+    window.CHQ.hideToast = hideToast;
+
+    function buildStaticTables() {
+        const profileRows = ['Total population','Total households','Children <1 year','Children 1–4 years','Children 5–9 years','Adolescents','Adults','Older adults ≥60 years','Pregnant women','Persons with disability'];
+        const tbP = document.getElementById('profileTableBody');
+        if (tbP) tbP.innerHTML = profileRows.map((label, i) => `<tr><td class="row-label">${label}</td><td><input id="prof${i}" placeholder="value" /></td></tr>`).join('');
+
+        const commRows = ['Tuberculosis','Dengue','Diarrhea','Acute respiratory infections','Skin infections'];
+        const tbC = document.getElementById('commTableBody');
+        if (tbC) tbC.innerHTML = commRows.map((d, i) => `<tr><td class="row-label">${d}</td><td class="num"><input id="comm${i}_cases" type="number" placeholder="n" /></td><td class="radio-cell"><input type="radio" name="comm${i}_trend" value="Increasing" /></td><td class="radio-cell"><input type="radio" name="comm${i}_trend" value="Decreasing" /></td></tr>`).join('');
+
+        const ncdRows = ['Hypertension','Diabetes mellitus','Heart disease','Stroke','Cancer','Asthma/COPD','Chronic kidney disease','Other'];
+        const tbN = document.getElementById('ncdTableBody');
+        if (tbN) tbN.innerHTML = ncdRows.map((c, i) => `<tr><td class="row-label">${c}</td><td><input id="ncd${i}" placeholder="n / rate" /></td></tr>`).join('');
+
+        const mchRows = ['Pregnant women registered','Pregnant women with adequate prenatal visits','High-risk pregnancies','Facility-based deliveries','Home deliveries','Postnatal visits','Maternal deaths','Infant deaths','Under-five deaths'];
+        const tbM = document.getElementById('mchTableBody');
+        if (tbM) tbM.innerHTML = mchRows.map((label, i) => `<tr><td class="row-label">${label}</td><td><input id="mch${i}" placeholder="n / %" /></td></tr>`).join('');
+    }
+
+    let saveIndicatorTimer = null;
+    function flashSaveIndicator() {
+        const pill = document.getElementById('savePill');
+        const text = document.getElementById('saveText');
+        if (!pill || !text) return;
+        pill.classList.add('saving'); text.textContent = 'Saving…';
+        clearTimeout(saveIndicatorTimer);
+        saveIndicatorTimer = setTimeout(() => { pill.classList.remove('saving'); text.textContent = 'Saved'; }, 450);
+    }
+
+    let saveTimer = null;
+    function scheduleSave() {
+        clearTimeout(saveTimer);
+        saveTimer = setTimeout(() => {
+            window.CHQ.storage.saveNow(); flashSaveIndicator();
+            window.CHQ.ui && window.CHQ.ui.refreshProgress();
+        }, 300);
+    }
+    window.CHQ.onChange = scheduleSave;
+
+    function resetForm() {
+        if (!confirm('Clear all form fields? This cannot be undone.')) return;
+        document.querySelectorAll('#chForm input, #chForm textarea').forEach(el => {
+            if (el.type === 'checkbox' || el.type === 'radio') el.checked = false;
+            else el.value = '';
+        });
+        // Re-fill the pre-filled health center field
+        const fCenter = document.getElementById('fCenter');
+        if (fCenter) fCenter.value = 'Brgy. Abilan Health Center';
+        window.CHQ.storage.clear();
+        const first = document.querySelector('.form-section[data-section-id]');
+        if (first && window.CHQ.ui) window.CHQ.ui.activate(first.dataset.sectionId);
+        window.CHQ.ui && window.CHQ.ui.refreshProgress();
+        showToast('Form reset. Local cache cleared.');
+    }
+    window.CHQ.reset = resetForm;
+
+    function bindAutosave() {
+        const form = document.getElementById('chForm');
+        if (!form) return;
+        form.addEventListener('input', scheduleSave, { passive: true });
+        form.addEventListener('change', scheduleSave, { passive: true });
+    }
+
+    function bindScrollTop() {
+        const btn = document.getElementById('scrollTopBtn');
+        if (!btn) return;
+        window.addEventListener('scroll', () => btn.classList.toggle('visible', window.scrollY > 400), { passive: true });
+    }
+
+    function boot() {
+        buildStaticTables();
+        window.CHQ.theme.init();
+        window.CHQ.ui.init();
+        const cached = window.CHQ.storage.load();
+        if (cached) { window.CHQ.storage.deserialize(cached); showToast('Restored saved progress from this device.'); }
+        bindAutosave(); bindScrollTop();
+        window.CHQ.ui.refreshProgress();
+        window.CHQ.ui.updateFloatingActions();
+    }
+
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+    else boot();
+})();
+
+(function () {
     function esc(str) {
-        return String(str == null ? '' : str)
-            .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-            .replace(/"/g, '&quot;').replace(/'/g, '&apos;');
+        return String(str == null ? '' : str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&apos;');
     }
     function heading(text) {
         return `<w:p><w:pPr><w:spacing w:before="280" w:after="120"/><w:rPr><w:b/><w:color w:val="A13D2C"/><w:sz w:val="28"/></w:rPr></w:pPr><w:r><w:rPr><w:b/><w:color w:val="A13D2C"/><w:sz w:val="28"/></w:rPr><w:t xml:space="preserve">${esc(text)}</w:t></w:r></w:p>`;
@@ -1927,34 +1709,26 @@ window.CHQ = window.CHQ || {};
         return `<w:p><w:pPr><w:spacing w:after="200"/><w:jc w:val="center"/><w:rPr><w:b/><w:color w:val="0A0E1A"/><w:sz w:val="36"/></w:rPr></w:pPr><w:r><w:rPr><w:b/><w:color w:val="0A0E1A"/><w:sz w:val="36"/></w:rPr><w:t xml:space="preserve">${esc(text)}</w:t></w:r></w:p>`;
     }
 
-    // ─── Row label maps (must match index.html tables) ───
-    const PROFILE_ROWS = [
-        'Total population','Total households','Children <1 year','Children 1–4 years',
-        'Children 5–9 years','Adolescents','Adults','Older adults ≥60 years',
-        'Pregnant women','Persons with disability'
-    ];
+    const PROFILE_ROWS = ['Total population','Total households','Children <1 year','Children 1–4 years','Children 5–9 years','Adolescents','Adults','Older adults ≥60 years','Pregnant women','Persons with disability'];
     const COMM_ROWS = ['Tuberculosis','Dengue','Diarrhea','Acute respiratory infections','Skin infections'];
     const NCD_ROWS  = ['Hypertension','Diabetes mellitus','Heart disease','Stroke','Cancer','Asthma/COPD','Chronic kidney disease','Other'];
     const MCH_ROWS  = ['Pregnant women registered','Pregnant women with adequate prenatal visits','High-risk pregnancies','Facility-based deliveries','Home deliveries','Postnatal visits','Maternal deaths','Infant deaths','Under-five deaths'];
 
-    function chipDisplay(data, field) {
-        const vals = Array.isArray(data[field]) ? data[field].slice() : [];
-        const other = (data[field + '__other'] || '').trim();
+    function chipDisplay(data, f) {
+        const vals = Array.isArray(data[f]) ? data[f].slice() : [];
+        const other = (data[f + '__other'] || '').trim();
         return vals.map(v => v === 'Other' && other ? `Other: ${other}` : v).join(', ');
     }
 
     async function generate(ev) {
         const btn = ev && ev.currentTarget ? ev.currentTarget : null;
         const original = btn ? btn.innerHTML : null;
-        if (btn) {
-            btn.classList.add('loading');
-            btn.innerHTML = '<span class="spinner"></span>Generating…';
-        }
+        if (btn) { btn.classList.add('loading'); btn.innerHTML = '<span class="spinner"></span>Generating…'; }
         try {
             const data = window.CHQ.storage.serialize();
             let body = '';
-            body += title('Community Health Center Data-Gathering Questionnaire');
-            body += `<w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="200"/></w:pPr><w:r><w:rPr><w:i/><w:color w:val="555555"/></w:rPr><w:t xml:space="preserve">For Community Health Nursing Assessment and Maglaya Health Problem Prioritization</w:t></w:r></w:p>`;
+            body += title('Brgy. Abilan Health Center — Community Health Questionnaire');
+            body += `<w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="60"/></w:pPr><w:r><w:rPr><w:i/><w:color w:val="555555"/></w:rPr><w:t xml:space="preserve">CSU SOM · Batch Atlas · Year Level 2 · MD202 · Community Health Nursing Assessment</w:t></w:r></w:p>`;
 
             body += heading('Respondent / Key Informant');
             body += field('Health Center / Barangay', data.fCenter);
@@ -1967,9 +1741,7 @@ window.CHQ = window.CHQ || {};
             body += field('Vulnerable groups', chipDisplay(data, 'vulnerableGroups'));
 
             body += heading('II. General Health Status');
-            for (let i = 1; i <= 5; i++) {
-                body += field(`Rank ${i}`, `${data['gh' + i] || '—'}  (${data['gh' + i + 'n'] || '—'})`);
-            }
+            for (let i = 1; i <= 5; i++) body += field(`Rank ${i}`, `${data['gh' + i] || '—'}  (${data['gh' + i + 'n'] || '—'})`);
             body += field('Trend vs. previous year', chipDisplay(data, 'ghTrend'));
             body += field('Affects greatest number of people', data.ghMost);
             body += field('Most serious problem', data.ghSerious);
@@ -2029,57 +1801,20 @@ window.CHQ = window.CHQ || {};
             body += field('If yes, common reasons', data.referralReasons);
             body += field('Health services still needed', data.neededServices);
 
-            body += heading("XII. Health Center's Perception of Community Priorities");
+            body += heading('XII. Community Health Priorities');
             body += field('Three most important health problems', data.top3);
             body += field('Affects the largest number of people', data.affectsMost);
             body += field('Most easily modified/addressed', data.mostModifiable);
             body += field('Greatest potential for prevention', data.mostPreventable);
             body += field('Urgent community concern', data.mostUrgent);
             body += field('Requires most additional resources', data.mostResource);
+            body += field('Additional notes / observations', data.additionalNotes);
 
-            body += heading('XIII. Maglaya Health Problem Prioritization Worksheet');
-            body += `<w:p><w:pPr><w:spacing w:after="80"/></w:pPr><w:r><w:rPr><w:i/><w:color w:val="555555"/><w:sz w:val="18"/></w:rPr><w:t xml:space="preserve">Total = (Nature × 2) + (Magnitude × 1) + (Modifiability × 3) + (Preventive × 4) + (Social × 5) — max 60</w:t></w:r></w:p>`;
-            const rows = Array.isArray(data.__maglaya) ? data.__maglaya : [];
-            if (rows.length === 0) {
-                body += field('Problems', '—');
-            } else {
-                rows.forEach(r => {
-                    const n = r.nature || '—';
-                    const m = r.magnitude || '—';
-                    const mo = r.modif || '—';
-                    const p = r.prev || '—';
-                    const s = r.social || '—';
-                    const total = (parseInt(n) * 2 || 0) + (parseInt(m) || 0) + (parseInt(mo) * 3 || 0) + (parseInt(p) * 4 || 0) + (parseInt(s) * 5 || 0);
-                    body += field(r.problem || 'Problem',
-                        `Evidence: ${r.evidence || '—'} | Nature: ${n} | Magnitude: ${m} | Modifiability: ${mo} | Preventive: ${p} | Social: ${s} | Total: ${total || '—'}`);
-                });
-            }
-
-            // ─── Package ───
-            const documentXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
-<w:body>${body}<w:sectPr><w:pgSz w:w="12240" w:h="15840"/><w:pgMar w:top="1080" w:right="1080" w:bottom="1080" w:left="1080"/></w:sectPr></w:body>
-</w:document>`;
-            const stylesXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<w:styles xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
-<w:docDefaults><w:rPrDefault><w:rPr><w:rFonts w:ascii="Calibri" w:hAnsi="Calibri"/><w:sz w:val="22"/></w:rPr></w:rPrDefault></w:docDefaults>
-<w:style w:type="paragraph" w:default="1" w:styleId="Normal"><w:name w:val="Normal"/></w:style>
-</w:styles>`;
-            const contentTypesXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
-<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>
-<Default Extension="xml" ContentType="application/xml"/>
-<Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/>
-<Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/>
-</Types>`;
-            const rootRelsXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
-<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/>
-</Relationships>`;
-            const docRelsXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
-<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>
-</Relationships>`;
+            const documentXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">\n<w:body>${body}<w:sectPr><w:pgSz w:w="12240" w:h="15840"/><w:pgMar w:top="1080" w:right="1080" w:bottom="1080" w:left="1080"/></w:sectPr></w:body>\n</w:document>`;
+            const stylesXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<w:styles xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">\n<w:docDefaults><w:rPrDefault><w:rPr><w:rFonts w:ascii="Calibri" w:hAnsi="Calibri"/><w:sz w:val="22"/></w:rPr></w:rPrDefault></w:docDefaults>\n<w:style w:type="paragraph" w:default="1" w:styleId="Normal"><w:name w:val="Normal"/></w:style>\n</w:styles>`;
+            const contentTypesXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">\n<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>\n<Default Extension="xml" ContentType="application/xml"/>\n<Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/>\n<Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/>\n</Types>`;
+            const rootRelsXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">\n<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/>\n</Relationships>`;
+            const docRelsXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">\n<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>\n</Relationships>`;
 
             const zip = new JSZip();
             zip.file('[Content_Types].xml', contentTypesXml);
@@ -2089,186 +1824,24 @@ window.CHQ = window.CHQ || {};
             word.file('styles.xml', stylesXml);
             word.folder('_rels').file('document.xml.rels', docRelsXml);
 
-            const blob = await zip.generateAsync({
-                type: 'blob',
-                mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-            });
+            const blob = await zip.generateAsync({ type: 'blob', mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
-            const nameBase = (data.fCenter || 'Community_Health_Questionnaire').replace(/[^a-z0-9]+/gi, '_');
             a.href = url;
-            a.download = `${nameBase}.docx`;
-            document.body.appendChild(a);
-            a.click();
-            a.remove();
+            a.download = 'AbHC_CHQ.docx';
+            document.body.appendChild(a); a.click(); a.remove();
             URL.revokeObjectURL(url);
             window.CHQ.showToast('DOCX generated ✓');
         } catch (err) {
             console.error(err);
             window.CHQ.showToast('Error generating DOCX: ' + err.message);
         } finally {
-            if (btn) {
-                btn.classList.remove('loading');
-                btn.innerHTML = original;
-            }
+            if (btn) { btn.classList.remove('loading'); btn.innerHTML = original; }
         }
     }
 
     window.CHQ.docx = { generate };
-})();window.CHQ = window.CHQ || {};
-
-(function () {
-    // ─── Toast ───
-    let toastTimer = null;
-    function showToast(msg, duration = 3500) {
-        const el = document.getElementById('toast');
-        const text = document.getElementById('toastMsg');
-        if (!el || !text) return;
-        text.textContent = msg;
-        el.classList.add('show');
-        clearTimeout(toastTimer);
-        toastTimer = setTimeout(() => el.classList.remove('show'), duration);
-    }
-    function hideToast() {
-        const el = document.getElementById('toast');
-        if (el) el.classList.remove('show');
-        clearTimeout(toastTimer);
-    }
-    window.CHQ.showToast = showToast;
-    window.CHQ.hideToast = hideToast;
-
-    // ─── Build static tables ───
-    function buildStaticTables() {
-        const profileRows = [
-            'Total population','Total households','Children <1 year','Children 1–4 years',
-            'Children 5–9 years','Adolescents','Adults','Older adults ≥60 years',
-            'Pregnant women','Persons with disability'
-        ];
-        const tbP = document.getElementById('profileTableBody');
-        if (tbP) {
-            tbP.innerHTML = profileRows.map((label, i) =>
-                `<tr><td class="row-label">${label}</td><td><input id="prof${i}" placeholder="value" /></td></tr>`
-            ).join('');
-        }
-
-        const commRows = ['Tuberculosis','Dengue','Diarrhea','Acute respiratory infections','Skin infections'];
-        const tbC = document.getElementById('commTableBody');
-        if (tbC) {
-            tbC.innerHTML = commRows.map((d, i) =>
-                `<tr>
-                    <td class="row-label">${d}</td>
-                    <td class="num"><input id="comm${i}_cases" type="number" placeholder="n" /></td>
-                    <td class="radio-cell"><input type="radio" name="comm${i}_trend" value="Increasing" /></td>
-                    <td class="radio-cell"><input type="radio" name="comm${i}_trend" value="Decreasing" /></td>
-                </tr>`
-            ).join('');
-        }
-
-        const ncdRows = ['Hypertension','Diabetes mellitus','Heart disease','Stroke','Cancer','Asthma/COPD','Chronic kidney disease','Other'];
-        const tbN = document.getElementById('ncdTableBody');
-        if (tbN) {
-            tbN.innerHTML = ncdRows.map((c, i) =>
-                `<tr><td class="row-label">${c}</td><td><input id="ncd${i}" placeholder="n / rate" /></td></tr>`
-            ).join('');
-        }
-
-        const mchRows = ['Pregnant women registered','Pregnant women with adequate prenatal visits','High-risk pregnancies','Facility-based deliveries','Home deliveries','Postnatal visits','Maternal deaths','Infant deaths','Under-five deaths'];
-        const tbM = document.getElementById('mchTableBody');
-        if (tbM) {
-            tbM.innerHTML = mchRows.map((label, i) =>
-                `<tr><td class="row-label">${label}</td><td><input id="mch${i}" placeholder="n / %" /></td></tr>`
-            ).join('');
-        }
-    }
-
-    // ─── Save indicator ───
-    let saveIndicatorTimer = null;
-    function flashSaveIndicator() {
-        const pill = document.getElementById('savePill');
-        const text = document.getElementById('saveText');
-        if (!pill || !text) return;
-        pill.classList.add('saving');
-        text.textContent = 'Saving…';
-        clearTimeout(saveIndicatorTimer);
-        saveIndicatorTimer = setTimeout(() => {
-            pill.classList.remove('saving');
-            text.textContent = 'Saved';
-        }, 450);
-    }
-
-    // ─── Autosave ───
-    let saveTimer = null;
-    function scheduleSave() {
-        clearTimeout(saveTimer);
-        saveTimer = setTimeout(() => {
-            window.CHQ.storage.saveNow();
-            flashSaveIndicator();
-            window.CHQ.ui && window.CHQ.ui.refreshProgress();
-        }, 300);
-    }
-    window.CHQ.onChange = scheduleSave;
-
-    // ─── Reset ───
-    function resetForm() {
-        if (!confirm('Clear all form fields? This cannot be undone.')) return;
-        document.querySelectorAll('#chForm input, #chForm textarea').forEach(el => {
-            if (el.type === 'checkbox' || el.type === 'radio') el.checked = false;
-            else el.value = '';
-        });
-        if (window.CHQ.maglaya) window.CHQ.maglaya.reset(5);
-        window.CHQ.storage.clear();
-
-        // Reset UI back to first section
-        const first = document.querySelector('.form-section[data-section-id]');
-        if (first && window.CHQ.ui) {
-            window.CHQ.ui.activate(first.dataset.sectionId);
-        }
-        window.CHQ.ui && window.CHQ.ui.refreshProgress();
-        showToast('Form reset. Local cache cleared.');
-    }
-    window.CHQ.reset = resetForm;
-
-    // ─── Wire autosave ───
-    function bindAutosave() {
-        const form = document.getElementById('chForm');
-        if (!form) return;
-        form.addEventListener('input', scheduleSave, { passive: true });
-        form.addEventListener('change', scheduleSave, { passive: true });
-    }
-
-    // ─── Scroll top ───
-    function bindScrollTop() {
-        const btn = document.getElementById('scrollTopBtn');
-        if (!btn) return;
-        window.addEventListener('scroll', () => {
-            btn.classList.toggle('visible', window.scrollY > 400);
-        }, { passive: true });
-    }
-
-    // ─── Boot ───
-    function boot() {
-        buildStaticTables();
-        window.CHQ.maglaya.init();
-        window.CHQ.theme.init();
-        window.CHQ.ui.init();
-
-        const cached = window.CHQ.storage.load();
-        if (cached) {
-            window.CHQ.storage.deserialize(cached);
-            showToast('Restored saved progress from this device.');
-        }
-
-        bindAutosave();
-        bindScrollTop();
-        window.CHQ.ui.refreshProgress();
-        window.CHQ.ui.updateFloatingActions();
-    }
-
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', boot);
-    } else {
-        boot();
-    }
-})();</script>
+})();
+</script>
 </body>
 </html>
