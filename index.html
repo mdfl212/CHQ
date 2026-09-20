@@ -6,10 +6,909 @@
 <title>Community Health Center · Data-Gathering Questionnaire</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,500;1,8..60,300;1,8..60,400&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="css/base.css" />
-<link rel="stylesheet" href="css/shared.css" />
-<link rel="stylesheet" href="css/ui-classic.css" />
-<link rel="stylesheet" href="css/ui-guided.css" />
+<style>
+/* ─── THEME TOKENS ─── */
+:root, [data-theme="day"] {
+    --bg: #faf6ee; --bg2: #ffffff; --bg3: #f7f1e6; --bg4: #efe6d3;
+    --border: rgba(47, 82, 51, 0.10); --border2: rgba(47, 82, 51, 0.22);
+    --text: #2a1f18; --text2: #4a3d33; --text3: #7a6a58;
+    --accent: #A13D2C; --accent2: #8a3324;
+    --accent-dim: rgba(161, 61, 44, 0.10);
+    --banner: #A13D2C; --subhead: #2F5233; --headShade: #F2E4C7;
+    --danger: #c0392b; --ok: #2F5233;
+    --radius: 6px; --radius-lg: 10px;
+    --shadow: 0 8px 30px rgba(80, 40, 20, 0.12);
+}
+[data-theme="night"] {
+    --bg: #0d0806; --bg2: #14100c; --bg3: #1c1712; --bg4: #251e17;
+    --border: rgba(217, 164, 65, 0.12); --border2: rgba(217, 164, 65, 0.24);
+    --text: #f5ede2; --text2: #b8a996; --text3: #7a6a58;
+    --accent: #D9A441; --accent2: #E8BE6C;
+    --accent-dim: rgba(217, 164, 65, 0.15);
+    --banner: #A13D2C; --subhead: #7CB88A; --headShade: #2a1f17;
+    --danger: #e35b5b; --ok: #7CB88A;
+    --shadow: 0 8px 30px rgba(0, 0, 0, 0.75);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+    background: var(--bg); color: var(--text);
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 14.5px; line-height: 1.7;
+    min-height: 100vh; padding: 0 20px 60px;
+    transition: background 0.25s, color 0.25s;
+}
+body::before {
+    content: ''; position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 0; opacity: 0.35;
+}
+[data-theme="day"] body::before { opacity: 0.14; }
+
+/* ─── APP SHELL ─── */
+.app-shell { position: relative; z-index: 1; max-width: 1440px; margin: 0 auto; }
+.app-main { min-width: 0; }
+.wrapper { max-width: 1200px; margin: 0 auto; }
+
+/* ─── HEADER ─── */
+.site-header {
+    border-bottom: 1px solid var(--border2);
+    padding: 32px 0 20px; margin-bottom: 28px;
+    position: relative;
+    display: flex; align-items: flex-end; justify-content: space-between;
+    flex-wrap: wrap; gap: 12px;
+}
+.site-header::after {
+    content: ''; position: absolute; bottom: -1px; left: 0;
+    width: 120px; height: 3px;
+    background: linear-gradient(90deg, var(--banner), var(--accent));
+}
+.header-eyebrow {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 4px;
+}
+.header-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(24px, 3.6vw, 38px);
+    font-weight: 700; line-height: 1.1; color: var(--text);
+}
+.header-title em { font-style: italic; color: var(--banner); }
+[data-theme="night"] .header-title em { color: var(--accent2); }
+.header-sub { font-size: 13px; color: var(--text2); font-style: italic; }
+.header-actions {
+    display: flex; gap: 8px; flex-wrap: wrap; align-items: center;
+}
+
+/* ─── SAVE PILL ─── */
+.save-pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--text3); padding: 4px 10px;
+    border: 1px solid var(--border); border-radius: 20px;
+    background: var(--bg3);
+    transition: color 0.2s, border-color 0.2s;
+}
+.save-pill.saving { color: var(--accent); border-color: var(--accent); }
+.save-pill .save-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--ok); transition: background 0.2s;
+}
+.save-pill.saving .save-dot { background: var(--accent); animation: pulse 1s ease infinite; }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+/* ─── FOOTER + SCROLL TOP ─── */
+.page-footer {
+    text-align: center; padding: 28px 0 8px;
+    border-top: 1px solid var(--border); margin-top: 12px;
+    font-size: 11px; color: var(--text3);
+    font-family: 'JetBrains Mono', monospace; letter-spacing: 0.08em;
+}
+.scroll-top {
+    position: fixed; bottom: 28px; right: 28px;
+    width: 40px; height: 40px; background: var(--bg3);
+    border: 1px solid var(--border2); border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; z-index: 50; transition: all 0.2s;
+    color: var(--text3); font-size: 16px;
+    opacity: 0; pointer-events: none;
+}
+.scroll-top.visible { opacity: 1; pointer-events: all; }
+.scroll-top:hover {
+    border-color: var(--accent); color: var(--accent);
+    background: var(--accent-dim);
+}
+
+@media (max-width: 700px) {
+    body { padding: 0 12px 40px; }
+    .site-header { flex-direction: column; align-items: flex-start; }
+    .header-actions { width: 100%; }
+}/* ─── BUTTONS ─── */
+.btn {
+    padding: 8px 16px; border-radius: var(--radius);
+    border: 1px solid var(--border2); background: transparent;
+    color: var(--text2); font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 0.08em; cursor: pointer;
+    transition: all 0.18s; white-space: nowrap;
+}
+.btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
+.btn.primary { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
+.btn.blue { background: var(--banner); border-color: var(--banner); color: #fff; font-weight: 600; }
+.btn.blue:hover { background: #b8482f; border-color: #b8482f; color: #fff; }
+.btn.danger:hover { border-color: var(--danger); color: var(--danger); background: rgba(227, 91, 91, 0.12); }
+.btn.loading { pointer-events: none; opacity: 0.7; }
+.btn.theme-toggle, .btn.ui-toggle { display: flex; align-items: center; gap: 6px; }
+
+/* ─── FORM SECTIONS ─── */
+.form-section {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: var(--radius-lg); padding: 20px 24px 24px;
+    margin-bottom: 20px; position: relative;
+    border-top: 3px solid var(--banner);
+    scroll-margin-top: 20px;
+}
+.form-section-title {
+    font-family: 'Playfair Display', serif; font-size: 19px; font-weight: 600;
+    color: var(--subhead); margin-bottom: 14px; padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+}
+.form-section-title .num {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px;
+    color: var(--banner); font-weight: 700; letter-spacing: 0.05em;
+}
+.form-section-title .badge {
+    font-family: 'JetBrains Mono', monospace; font-size: 9px;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    background: var(--accent-dim); color: var(--accent);
+    padding: 2px 10px; border-radius: 3px; font-weight: 500;
+    border: 1px solid var(--border2);
+}
+
+/* ─── FORM ROWS / GROUPS ─── */
+.form-row {
+    display: flex; flex-wrap: wrap; gap: 12px 20px;
+    margin-bottom: 10px; align-items: center;
+}
+.form-group {
+    display: flex; flex-direction: column;
+    flex: 1 0 180px; min-width: 140px; position: relative;
+}
+.form-group.full { flex: 1 0 100%; }
+.form-group.half { flex: 1 0 calc(50% - 12px); min-width: 180px; }
+.form-group.third { flex: 1 0 calc(33.33% - 14px); min-width: 140px; }
+.form-group label {
+    font-family: 'JetBrains Mono', monospace; font-size: 9.5px;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--text3); margin-bottom: 3px;
+}
+input, select, textarea {
+    background: var(--bg3); border: 1px solid var(--border2);
+    border-radius: var(--radius); color: var(--text);
+    font-family: 'Source Serif 4', Georgia, serif; font-size: 13.5px;
+    padding: 7px 10px; transition: border-color 0.2s;
+    width: 100%; outline: none;
+}
+input:focus, select:focus, textarea:focus { border-color: var(--accent); }
+textarea { resize: vertical; min-height: 44px; font-size: 13px; line-height: 1.5; }
+
+/* ─── CHIPS ─── */
+.chip-group { display: flex; flex-wrap: wrap; gap: 6px; padding: 4px 0; }
+.chip {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 5px 11px 5px 8px; border-radius: 20px;
+    border: 1px solid var(--border2); background: var(--bg3);
+    font-size: 12px; cursor: pointer; user-select: none;
+    transition: all 0.15s; color: var(--text2); line-height: 1.3;
+}
+.chip:hover { border-color: var(--accent); color: var(--accent); }
+.chip input { display: none; }
+.chip::before {
+    content: ''; display: inline-block;
+    width: 12px; height: 12px; border: 1.5px solid currentColor;
+    border-radius: 3px; flex-shrink: 0;
+    text-align: center; line-height: 10px; font-size: 10px; font-weight: 700;
+}
+.chip:has(input:checked) {
+    background: var(--accent-dim); border-color: var(--accent);
+    color: var(--accent); font-weight: 500;
+}
+[data-theme="day"] .chip:has(input:checked) { color: var(--banner); }
+.chip:has(input:checked)::before {
+    content: '✓'; background: currentColor;
+    color: var(--bg2); border-color: currentColor;
+}
+.chip .chip-other-input {
+    background: transparent; border: none;
+    border-bottom: 1px solid currentColor;
+    width: 90px; padding: 0 2px; font-size: 12px;
+    color: inherit; font-family: inherit; margin-left: 2px;
+}
+.chip .chip-other-input:focus { outline: none; }
+
+/* ─── TABLES ─── */
+.data-table-wrap {
+    overflow-x: auto; margin-top: 8px;
+    border-radius: var(--radius); border: 1px solid var(--border);
+}
+.data-table {
+    width: 100%; border-collapse: collapse;
+    font-size: 13px; background: var(--bg2);
+}
+.data-table th, .data-table td {
+    border: 1px solid var(--border2); padding: 6px 8px;
+    text-align: left; vertical-align: middle;
+}
+.data-table th {
+    background: var(--headShade);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--subhead); font-weight: 600;
+}
+[data-theme="night"] .data-table th { color: var(--subhead); background: var(--bg4); }
+.data-table td input {
+    background: transparent; border: none;
+    width: 100%; padding: 3px 4px;
+    font-size: 13px; color: var(--text);
+}
+.data-table td input:focus { background: var(--bg4); border-radius: 3px; }
+.data-table td.num { text-align: center; }
+.data-table td.num input { text-align: center; }
+.data-table .row-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11.5px; color: var(--subhead);
+    font-weight: 600; background: var(--bg3);
+}
+.data-table .radio-cell { text-align: center; }
+.data-table .radio-cell input[type="radio"] {
+    accent-color: var(--accent); width: 15px; height: 15px; cursor: pointer;
+}
+
+/* ─── MAGLAYA ─── */
+.maglaya-table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+.maglaya-table th, .maglaya-table td {
+    border: 1px solid var(--border2); padding: 4px 6px;
+    text-align: center; vertical-align: top;
+}
+.maglaya-table th {
+    background: var(--headShade);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; letter-spacing: 0.06em;
+    text-transform: uppercase; color: var(--subhead);
+    font-weight: 600; padding: 8px 4px;
+}
+[data-theme="night"] .maglaya-table th { background: var(--bg4); }
+.maglaya-table th .w { display: block; font-size: 8.5px; color: var(--text3); font-weight: 400; margin-top: 2px; }
+.maglaya-table td input {
+    width: 100%; background: transparent; border: none;
+    text-align: center; padding: 4px 3px;
+    font-size: 12.5px; color: var(--text);
+}
+.maglaya-table td input[type="text"] { text-align: left; }
+.maglaya-table td input:focus { background: var(--bg4); border-radius: 3px; }
+.maglaya-table .problem-cell { min-width: 160px; }
+.maglaya-table .evidence-cell { min-width: 160px; }
+.maglaya-table .score-cell { width: 55px; }
+.maglaya-table .total-cell {
+    background: var(--accent-dim);
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700; color: var(--banner); font-size: 13px;
+    width: 60px; text-align: center; vertical-align: middle;
+}
+[data-theme="night"] .maglaya-table .total-cell { color: var(--accent); }
+.maglaya-table .remove-row {
+    background: none; border: none; color: var(--text3);
+    cursor: pointer; font-size: 15px; line-height: 1; padding: 2px 4px;
+}
+.maglaya-table .remove-row:hover { color: var(--danger); }
+
+/* ─── QUESTION / HOWTO ─── */
+.q { font-weight: 600; color: var(--text); font-size: 14px; margin: 14px 0 6px; }
+.q .qn { font-family: 'JetBrains Mono', monospace; color: var(--accent); font-size: 12.5px; margin-right: 4px; }
+.howto {
+    margin-top: 14px; padding: 10px 14px;
+    background: var(--bg3); border-left: 3px solid var(--accent);
+    border-radius: var(--radius); font-size: 12.5px;
+    color: var(--text2); display: flex; align-items: flex-start; gap: 10px;
+}
+.howto .icon { font-size: 17px; line-height: 1; color: var(--accent); flex-shrink: 0; margin-top: 2px; }
+.howto strong { color: var(--subhead); font-weight: 600; }
+
+/* ─── TOAST ─── */
+.toast {
+    position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+    background: var(--bg3); border: 1px solid var(--border2);
+    border-radius: var(--radius-lg); padding: 14px 28px;
+    color: var(--text); font-size: 13px; z-index: 200;
+    opacity: 0; pointer-events: none; transition: opacity 0.35s ease;
+    max-width: 90%; text-align: center; box-shadow: var(--shadow);
+}
+.toast.show { opacity: 1; pointer-events: all; }
+.toast .toast-close {
+    margin-left: 14px; background: none; border: none;
+    color: var(--text3); cursor: pointer; font-size: 16px;
+}
+
+/* ─── SPINNER ─── */
+.spinner {
+    display: inline-block; width: 18px; height: 18px;
+    border: 2px solid var(--border2);
+    border-top: 2px solid var(--accent);
+    border-radius: 50%; animation: spin 0.7s linear infinite;
+    margin-right: 8px; vertical-align: middle;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ─── UTILITY ─── */
+.mt-8 { margin-top: 8px; }
+.mt-12 { margin-top: 12px; }
+
+/* ─── PRINT ─── */
+@media print {
+    :root, [data-theme="day"], [data-theme="night"] {
+        --bg: #ffffff; --bg2: #ffffff; --bg3: #f7f7f7; --bg4: #eeeeee;
+        --text: #000000; --text2: #222222; --text3: #555555;
+        --border: rgba(0,0,0,0.15); --border2: rgba(0,0,0,0.35);
+        --accent: #A13D2C; --accent2: #8a3324;
+        --accent-dim: rgba(161, 61, 44, 0.10);
+        --subhead: #2F5233; --headShade: #F2E4C7;
+        --banner: #A13D2C; --shadow: none;
+    }
+    @page { size: A4; margin: 14mm; }
+    body { padding: 0; background: #fff !important; font-size: 11px; }
+    body::before { display: none !important; }
+    .wrapper, .app-shell { max-width: none; }
+    .site-header { padding: 0 0 12px; margin-bottom: 16px; }
+    .site-header::after { display: none; }
+    .header-actions, .scroll-top, .toast, .howto, .btn,
+    .chip-other-input, .section-nav, .save-pill { display: none !important; }
+    .form-section {
+        box-shadow: none; page-break-inside: avoid;
+        padding: 10px 12px; margin-bottom: 10px;
+        border-top-width: 2px;
+    }
+    .form-section-title { font-size: 14px; margin-bottom: 8px; padding-bottom: 4px; }
+    .form-row { margin-bottom: 4px; gap: 6px 12px; }
+    .q { margin: 8px 0 4px; font-size: 12px; }
+    .data-table th, .data-table td { padding: 3px 5px; font-size: 10px; }
+    .maglaya-table th, .maglaya-table td { padding: 3px 4px; font-size: 9.5px; }
+    input, textarea, select { background: transparent !important; border-color: rgba(0,0,0,0.25) !important; }
+    .chip { border-color: rgba(0,0,0,0.3); background: transparent; }
+}
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 700px) {
+    .form-group.half, .form-group.third { flex: 1 0 100%; }
+    .form-row { gap: 8px; }
+    .form-section { padding: 14px 14px 18px; }
+    .maglaya-table { font-size: 10px; }
+    .maglaya-table th { font-size: 8px; padding: 4px 2px; }
+}/* ─── Classic = full-width stacked sections ─── */
+
+[data-ui="classic"] .section-nav,
+[data-ui="classic"] .guided-actions,
+[data-ui="classic"] .mobile-menu-btn,
+[data-ui="classic"] .nav-backdrop { display: none !important; }
+
+[data-ui="classic"] .app-shell { display: block; }
+[data-ui="classic"] .form-section { display: block; }
+[data-ui="classic"] .guided-step-meta { display: none; }/* ═══════════════════════════════════════════════════════════════
+   GUIDED UI — OB-GYN style stepper
+   Fixed collapsible sidebar · one section at a time · floating actions
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Hidden in classic mode */
+.section-nav,
+.guided-actions,
+.mobile-menu-btn,
+.nav-backdrop { display: none; }
+
+/* ─── GUIDED MODE TOKENS ─── */
+[data-ui="guided"] {
+    --sb-width: 240px;
+    --sb-width-collapsed: 64px;
+    --sb-current: var(--sb-width);
+}
+[data-ui="guided"].guided-sb-collapsed {
+    --sb-current: var(--sb-width-collapsed);
+}
+
+/* ─── SIDEBAR ─── */
+[data-ui="guided"] .section-nav {
+    display: flex;
+    position: fixed;
+    top: 0; left: 0;
+    height: 100vh;
+    width: var(--sb-current);
+    background: var(--bg2);
+    border-right: 1px solid var(--border2);
+    z-index: 900;
+    flex-direction: column;
+    overflow: hidden;
+    transition: width .28s cubic-bezier(.4,0,.2,1);
+    box-shadow: 1px 0 3px rgba(0,0,0,.04);
+}
+
+/* ─── SIDEBAR HEADER ─── */
+[data-ui="guided"] .nav-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 14px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+}
+[data-ui="guided"] .nav-collapse {
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    background: transparent;
+    border: 1px solid var(--border2);
+    color: var(--accent);
+    font-size: 16px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all .18s ease;
+    flex-shrink: 0;
+}
+[data-ui="guided"] .nav-collapse:hover {
+    background: var(--accent-dim);
+    border-color: var(--accent);
+}
+[data-ui="guided"] .nav-brand {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--accent);
+    white-space: nowrap;
+    font-weight: 600;
+    transition: opacity .15s;
+}
+[data-ui="guided"].guided-sb-collapsed .nav-brand { opacity: 0; }
+
+/* ─── PROGRESS ─── */
+[data-ui="guided"] .nav-progress {
+    padding: 14px 18px 10px;
+    flex-shrink: 0;
+    border-bottom: 1px solid var(--border);
+}
+[data-ui="guided"].guided-sb-collapsed .nav-progress { padding: 14px 12px 10px; }
+[data-ui="guided"] .nav-progress-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px; letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--text3);
+    margin-bottom: 6px;
+    display: flex; justify-content: space-between;
+    white-space: nowrap; overflow: hidden;
+}
+[data-ui="guided"].guided-sb-collapsed .nav-progress-label { opacity: 0; height: 0; margin: 0; }
+[data-ui="guided"] .nav-progress-track {
+    height: 3px;
+    background: var(--bg4);
+    border-radius: 2px;
+    overflow: hidden;
+}
+[data-ui="guided"] .nav-progress-fill {
+    display: block;
+    height: 100%; width: 0%;
+    background: linear-gradient(90deg, var(--banner), var(--accent));
+    border-radius: 2px;
+    transition: width .35s ease;
+}
+
+/* ─── NAV LIST ─── */
+[data-ui="guided"] .nav-list {
+    list-style: none;
+    padding: 8px 8px 16px;
+    margin: 0;
+    flex: 1;
+    overflow-y: auto; overflow-x: hidden;
+    display: flex; flex-direction: column; gap: 2px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border2) transparent;
+}
+[data-ui="guided"] .nav-list::-webkit-scrollbar { width: 4px; }
+[data-ui="guided"] .nav-list::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+[data-ui="guided"] .nav-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 9px 10px; border-radius: 8px;
+    color: var(--text2); font-size: 12px;
+    cursor: pointer; transition: all .18s ease;
+    white-space: nowrap; overflow: hidden;
+    border: 1px solid transparent;
+    background: transparent; width: 100%; text-align: left;
+    font-family: inherit;
+}
+[data-ui="guided"] .nav-item:hover {
+    background: var(--accent-dim);
+    color: var(--accent);
+}
+[data-ui="guided"] .nav-item.active {
+    background: var(--accent-dim);
+    color: var(--accent);
+    border-color: var(--border2);
+    font-weight: 600;
+}
+[data-ui="guided"] .nav-item.filled .nav-num {
+    background: var(--ok, #2F5233);
+    color: #ffffff;
+    border-color: var(--ok, #2F5233);
+}
+[data-ui="guided"] .nav-item.active .nav-num {
+    background: var(--accent);
+    color: var(--bg2);
+    border-color: var(--accent);
+    transform: scale(1.08);
+}
+
+[data-ui="guided"] .nav-num {
+    width: 24px; height: 24px; border-radius: 50%;
+    border: 1px solid var(--border2);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; font-weight: 600;
+    flex-shrink: 0;
+    color: var(--text2);
+    background: var(--bg3);
+    transition: all .18s;
+}
+[data-ui="guided"] .nav-icon {
+    font-size: 15px; line-height: 1; flex-shrink: 0;
+    display: none;
+}
+[data-ui="guided"].guided-sb-collapsed .nav-num { display: none; }
+[data-ui="guided"].guided-sb-collapsed .nav-icon { display: block; }
+[data-ui="guided"] .nav-label {
+    font-size: 12px; letter-spacing: .02em;
+    opacity: 1; transition: opacity .15s;
+    overflow: hidden; text-overflow: ellipsis;
+}
+[data-ui="guided"].guided-sb-collapsed .nav-label { opacity: 0; width: 0; }
+[data-ui="guided"].guided-sb-collapsed .nav-item {
+    justify-content: center;
+    padding: 10px 8px;
+}
+
+/* ─── SIDEBAR FOOTER ─── */
+[data-ui="guided"] .nav-footer {
+    padding: 10px 8px 14px;
+    border-top: 1px solid var(--border);
+    flex-shrink: 0;
+    display: flex; flex-direction: column; gap: 4px;
+}
+[data-ui="guided"] .nav-action {
+    display: flex; align-items: center; gap: 12px;
+    padding: 9px 10px; border-radius: 8px;
+    color: var(--text2); font-size: 12px;
+    cursor: pointer; transition: all .18s;
+    background: transparent; border: 1px solid transparent;
+    font-family: inherit; width: 100%; text-align: left;
+    white-space: nowrap; overflow: hidden;
+}
+[data-ui="guided"] .nav-action:hover {
+    background: var(--accent-dim);
+    color: var(--accent);
+    border-color: var(--border2);
+}
+[data-ui="guided"] .nav-action .nav-icon {
+    display: block; font-size: 15px; flex-shrink: 0;
+}
+[data-ui="guided"] .nav-action .nav-label { opacity: 1; }
+[data-ui="guided"].guided-sb-collapsed .nav-action {
+    justify-content: center;
+    padding: 10px 8px;
+}
+[data-ui="guided"].guided-sb-collapsed .nav-action .nav-label { opacity: 0; width: 0; }
+[data-ui="guided"] .reset-action { color: var(--danger); }
+[data-ui="guided"] .reset-action:hover {
+    background: rgba(227, 91, 91, 0.08);
+    border-color: rgba(227, 91, 91, 0.25);
+    color: var(--danger);
+}
+
+/* ─── MAIN LAYOUT ─── */
+[data-ui="guided"] .app-shell {
+    display: block;
+    padding-left: var(--sb-current);
+    transition: padding-left .28s cubic-bezier(.4,0,.2,1);
+}
+[data-ui="guided"] .app-main {
+    min-width: 0;
+    padding: 0 24px 140px;
+}
+[data-ui="guided"] .wrapper { max-width: 1040px; margin: 0 auto; }
+
+/* ─── HEADER (minimal in guided mode) ─── */
+[data-ui="guided"] .site-header {
+    padding: 24px 0 16px;
+    margin-bottom: 22px;
+}
+[data-ui="guided"] .header-title { font-size: clamp(20px, 2.4vw, 28px); }
+[data-ui="guided"] .header-actions > .btn { display: none; }
+[data-ui="guided"] .header-actions > .btn.ui-toggle { display: inline-flex; }
+[data-ui="guided"] .header-actions > .save-pill { display: inline-flex; }
+
+/* ─── ONE SECTION AT A TIME ─── */
+[data-ui="guided"] .form-section { display: none; }
+[data-ui="guided"] .form-section.active {
+    display: block;
+    animation: guidedFadeIn .35s ease-out;
+}
+@keyframes guidedFadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── SECTION CARD / STEP HEADER ─── */
+[data-ui="guided"] .form-section {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 24px 28px 26px;
+    box-shadow: 0 1px 2px rgba(0,0,0,.04), 0 1px 3px rgba(0,0,0,.05);
+    border-top: none;
+    margin-bottom: 24px;
+    position: relative;
+    scroll-margin-top: 20px;
+}
+[data-ui="guided"] .form-section::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--banner), var(--accent));
+    border-radius: 10px 10px 0 0;
+}
+
+[data-ui="guided"] .form-section-title {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text);
+}
+[data-ui="guided"] .form-section-title .num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    background: var(--accent-dim);
+    color: var(--accent);
+    padding: 4px 12px;
+    border-radius: 20px;
+    border: 1px solid var(--border2);
+    font-weight: 600;
+    flex-shrink: 0;
+}
+[data-ui="guided"] .form-section-title .num::before {
+    content: 'STEP ';
+    opacity: .75;
+    margin-right: 2px;
+}
+[data-ui="guided"] .form-section-title .badge {
+    font-size: 9px;
+    letter-spacing: .14em;
+    background: var(--bg3);
+    color: var(--text3);
+    border: 1px solid var(--border);
+    padding: 2px 10px;
+    border-radius: 3px;
+    font-weight: 500;
+    margin-left: auto;
+}
+[data-ui="guided"] .form-section-title .step-counter {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: .1em;
+    margin-left: 8px;
+    flex-shrink: 0;
+}
+
+/* ─── FLOATING ACTION BUTTONS ─── */
+[data-ui="guided"] .guided-actions {
+    display: flex;
+    position: fixed;
+    bottom: 24px; right: 24px;
+    z-index: 1000;
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-end;
+    pointer-events: none;
+}
+[data-ui="guided"] .guided-actions > * { pointer-events: auto; }
+
+[data-ui="guided"] .action-row {
+    display: flex; align-items: center; gap: 10px;
+}
+
+[data-ui="guided"] .action-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: .03em;
+    padding: 8px 14px;
+    border-radius: 24px;
+    background: var(--bg2);
+    border: 1px solid var(--border2);
+    color: var(--accent);
+    white-space: nowrap;
+    box-shadow: 0 4px 12px rgba(0,0,0,.08);
+    max-width: 260px;
+    overflow: hidden; text-overflow: ellipsis;
+    font-weight: 600;
+}
+
+[data-ui="guided"] .circle-btn {
+    width: 52px; height: 52px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700; font-size: 20px;
+    line-height: 1;
+    flex-shrink: 0;
+    transition: transform .18s ease, box-shadow .18s ease,
+                background .18s ease, border-color .18s ease, color .18s ease;
+}
+[data-ui="guided"] .circle-btn:hover {
+    transform: translateY(-2px) scale(1.05);
+}
+[data-ui="guided"] .circle-btn:active {
+    transform: translateY(0) scale(1);
+}
+[data-ui="guided"] .circle-btn:disabled {
+    opacity: .35; cursor: not-allowed;
+    transform: none !important;
+    filter: grayscale(.4);
+}
+
+[data-ui="guided"] .circle-back {
+    width: 44px; height: 44px;
+    background: var(--bg2);
+    border: 1px solid var(--border2);
+    color: var(--text2);
+    font-size: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.05);
+}
+[data-ui="guided"] .circle-back:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--accent-dim);
+}
+
+[data-ui="guided"] .circle-next {
+    width: 56px; height: 56px;
+    background: var(--accent);
+    color: var(--bg2);
+    box-shadow: 0 6px 20px rgba(161, 61, 44, .3);
+    font-size: 22px;
+}
+[data-ui="guided"] .circle-next:hover {
+    background: var(--accent2);
+    box-shadow: 0 10px 28px rgba(161, 61, 44, .4);
+}
+[data-ui="guided"] .circle-next.complete {
+    background: var(--ok, #2F5233);
+    color: #ffffff;
+    box-shadow: 0 6px 20px rgba(47, 82, 51, .35);
+}
+
+[data-ui="guided"] .circle-docx {
+    width: 58px; height: 58px;
+    background: var(--bg2);
+    border: 2px solid var(--accent);
+    color: var(--accent);
+    font-size: 10px;
+    box-shadow: 0 6px 20px rgba(0,0,0,.08),
+                0 0 0 4px var(--accent-dim);
+}
+[data-ui="guided"] .circle-docx:hover {
+    background: var(--accent-dim);
+    border-color: var(--accent2);
+    box-shadow: 0 10px 26px rgba(0,0,0,.12),
+                0 0 0 4px rgba(161, 61, 44, .18);
+}
+[data-ui="guided"] .circle-docx .docx-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; font-weight: 700; letter-spacing: .08em;
+}
+
+/* ─── TOAST REPOSITION ─── */
+[data-ui="guided"] .toast { bottom: 180px; }
+
+/* ─── MOBILE MENU BUTTON ─── */
+[data-ui="guided"] .mobile-menu-btn {
+    display: none;
+    position: fixed;
+    top: 14px; left: 14px;
+    width: 42px; height: 42px;
+    border-radius: 10px;
+    background: var(--bg2);
+    border: 1px solid var(--border2);
+    color: var(--accent);
+    font-size: 18px;
+    align-items: center; justify-content: center;
+    cursor: pointer;
+    z-index: 1000;
+    box-shadow: 0 4px 12px rgba(0,0,0,.08);
+}
+
+/* ─── MOBILE BACKDROP ─── */
+[data-ui="guided"] .nav-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.35);
+    z-index: 880;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .28s ease;
+}
+[data-ui="guided"].nav-mobile-open .nav-backdrop {
+    opacity: 1;
+    pointer-events: all;
+}
+
+/* ─── HIDE SCROLL TOP IN GUIDED (floating actions take over) ─── */
+[data-ui="guided"] .scroll-top { display: none; }
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 900px) {
+    [data-ui="guided"] .section-nav {
+        transform: translateX(-100%);
+        width: 240px !important;
+        transition: transform .28s cubic-bezier(.4,0,.2,1);
+        box-shadow: 8px 0 32px rgba(0,0,0,.15);
+    }
+    [data-ui="guided"].nav-mobile-open .section-nav {
+        transform: translateX(0);
+    }
+    /* Force expanded state in drawer */
+    [data-ui="guided"].guided-sb-collapsed .nav-brand,
+    [data-ui="guided"].guided-sb-collapsed .nav-progress-label,
+    [data-ui="guided"].guided-sb-collapsed .nav-label { opacity: 1; width: auto; height: auto; }
+    [data-ui="guided"].guided-sb-collapsed .nav-num { display: flex; }
+    [data-ui="guided"].guided-sb-collapsed .nav-icon { display: none; }
+    [data-ui="guided"].guided-sb-collapsed .nav-item { justify-content: flex-start; padding: 9px 10px; }
+
+    [data-ui="guided"] .app-shell { padding-left: 0 !important; }
+    [data-ui="guided"] .app-main { padding: 0 16px 160px; }
+    [data-ui="guided"] .mobile-menu-btn { display: flex; }
+    [data-ui="guided"] .site-header { padding-top: 60px; }
+    [data-ui="guided"] .form-section { padding: 18px 16px 20px; }
+
+    [data-ui="guided"] .guided-actions { bottom: 16px; right: 16px; gap: 10px; }
+    [data-ui="guided"] .circle-btn { width: 46px; height: 46px; font-size: 18px; }
+    [data-ui="guided"] .circle-back { width: 40px; height: 40px; font-size: 15px; }
+    [data-ui="guided"] .circle-next { width: 50px; height: 50px; font-size: 19px; }
+    [data-ui="guided"] .circle-docx { width: 52px; height: 52px; }
+    [data-ui="guided"] .circle-docx .docx-text { font-size: 10px; }
+    [data-ui="guided"] .action-label {
+        font-size: 9px;
+        padding: 6px 10px;
+        max-width: 150px;
+    }
+}
+
+/* ─── PRINT OVERRIDE (always expand full doc) ─── */
+@media print {
+    [data-ui="guided"] .section-nav,
+    [data-ui="guided"] .guided-actions,
+    [data-ui="guided"] .mobile-menu-btn,
+    [data-ui="guided"] .nav-backdrop { display: none !important; }
+    [data-ui="guided"] .app-shell { padding-left: 0 !important; }
+    [data-ui="guided"] .form-section { display: block !important; }
+    [data-ui="guided"] .form-section-title .step-counter { display: none; }
+}</style>
 </head>
 <body>
 
@@ -466,11 +1365,910 @@
     </div>
 </div>
 
-<script src="js/storage.js"></script>
-<script src="js/theme.js"></script>
-<script src="js/maglaya.js"></script>
-<script src="js/ui.js"></script>
-<script src="js/docx.js"></script>
-<script src="js/main.js"></script>
+<script>
+window.CHQ = window.CHQ || {};
+
+(function () {
+    const STATE_KEY = 'chq:state:v1';
+    const META_KEY  = 'chq:meta:v1';
+    const UI_KEY    = 'chq:ui:v1';
+    const THEME_KEY = 'chq:theme:v1';
+
+    // ─── Serialize the entire form to a plain object ───
+    function serialize() {
+        const data = {};
+
+        // text / number / date / textarea (by id)
+        document.querySelectorAll(
+            '#chForm input[id]:not([type=checkbox]):not([type=radio]), #chForm textarea[id]'
+        ).forEach(el => {
+            data[el.id] = el.value;
+        });
+
+        // chip groups (by data-field)
+        document.querySelectorAll('.chip-group[data-field]').forEach(wrap => {
+            const field = wrap.dataset.field;
+            const values = [];
+            wrap.querySelectorAll('input[type=checkbox]:checked, input[type=radio]:checked').forEach(inp => {
+                values.push(inp.value);
+            });
+            data[field] = values;
+            const other = wrap.querySelector('.chip-other-input');
+            if (other) data[field + '__other'] = other.value;
+        });
+
+        // Maglaya rows
+        data.__maglaya = window.CHQ.maglaya
+            ? window.CHQ.maglaya.getRows()
+            : [];
+
+        return data;
+    }
+
+    // ─── Apply a serialized object back to the form ───
+    function deserialize(data) {
+        if (!data || typeof data !== 'object') return;
+
+        Object.entries(data).forEach(([key, value]) => {
+            if (key === '__maglaya') return;
+            if (key.endsWith('__other')) return;
+            const el = document.getElementById(key);
+            if (!el) return;
+            if (el.type === 'checkbox' || el.type === 'radio') return;
+            if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+                el.value = value == null ? '' : value;
+            }
+        });
+
+        document.querySelectorAll('.chip-group[data-field]').forEach(wrap => {
+            const field = wrap.dataset.field;
+            const values = Array.isArray(data[field]) ? data[field] : [];
+            wrap.querySelectorAll('input[type=checkbox], input[type=radio]').forEach(inp => {
+                inp.checked = values.includes(inp.value);
+            });
+            const other = wrap.querySelector('.chip-other-input');
+            if (other) other.value = data[field + '__other'] || '';
+        });
+
+        if (window.CHQ.maglaya && Array.isArray(data.__maglaya)) {
+            window.CHQ.maglaya.setRows(data.__maglaya);
+        }
+    }
+
+    // ─── Save / load / clear state ───
+    function saveNow() {
+        try {
+            const data = serialize();
+            localStorage.setItem(STATE_KEY, JSON.stringify(data));
+            localStorage.setItem(META_KEY, JSON.stringify({ savedAt: Date.now() }));
+            return true;
+        } catch (e) {
+            console.warn('[CHQ] save failed', e);
+            return false;
+        }
+    }
+
+    function load() {
+        try {
+            const raw = localStorage.getItem(STATE_KEY);
+            return raw ? JSON.parse(raw) : null;
+        } catch (e) {
+            console.warn('[CHQ] load failed', e);
+            return null;
+        }
+    }
+
+    function clear() {
+        try {
+            localStorage.removeItem(STATE_KEY);
+            localStorage.removeItem(META_KEY);
+        } catch (e) { /* ignore */ }
+    }
+
+    function lastSavedAt() {
+        try {
+            const raw = localStorage.getItem(META_KEY);
+            if (!raw) return null;
+            return JSON.parse(raw).savedAt || null;
+        } catch { return null; }
+    }
+
+    // ─── Preference helpers ───
+    function getPref(key, fallback) {
+        try { return localStorage.getItem(key) || fallback; }
+        catch { return fallback; }
+    }
+    function setPref(key, value) {
+        try { localStorage.setItem(key, value); } catch { /* ignore */ }
+    }
+
+    window.CHQ.storage = {
+        serialize, deserialize,
+        saveNow, load, clear, lastSavedAt,
+        getPref, setPref,
+        STATE_KEY, META_KEY, UI_KEY, THEME_KEY
+    };
+})();window.CHQ = window.CHQ || {};
+
+(function () {
+    const { getPref, setPref, THEME_KEY } = window.CHQ.storage;
+
+    function apply(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+
+        // Header toggle
+        const btn = document.getElementById('themeToggleBtn');
+        if (btn) btn.textContent = theme === 'night' ? '☀ Day' : '🌙 Night';
+
+        // Sidebar toggle (guided mode)
+        const sIcon = document.getElementById('sidebarThemeIcon');
+        const sLabel = document.getElementById('sidebarThemeLabel');
+        if (sIcon)   sIcon.textContent   = theme === 'night' ? '☀' : '🌙';
+        if (sLabel)  sLabel.textContent  = theme === 'night' ? 'Light Mode' : 'Dark Mode';
+    }
+
+    function toggle() {
+        const current = document.documentElement.getAttribute('data-theme') || 'day';
+        const next = current === 'night' ? 'day' : 'night';
+        apply(next);
+        setPref(THEME_KEY, next);
+    }
+
+    function init() {
+        const saved = getPref(THEME_KEY, 'day');
+        apply(saved);
+
+        const btn = document.getElementById('themeToggleBtn');
+        if (btn) btn.addEventListener('click', toggle);
+
+        const sbBtn = document.getElementById('sidebarThemeBtn');
+        if (sbBtn) sbBtn.addEventListener('click', toggle);
+    }
+
+    window.CHQ.theme = { init, apply, toggle };
+})();window.CHQ = window.CHQ || {};
+
+(function () {
+    let rowCounter = 0;
+
+    function makeRow() {
+        const tr = document.createElement('tr');
+        tr.dataset.rowId = 'mg' + (rowCounter++);
+        tr.innerHTML = `
+            <td class="problem-cell"><input type="text" class="mg-problem" placeholder="Problem" /></td>
+            <td class="evidence-cell"><input type="text" class="mg-evidence" placeholder="Evidence / magnitude data" /></td>
+            <td class="score-cell"><input type="number" min="1" max="4" class="mg-score mg-nature" /></td>
+            <td class="score-cell"><input type="number" min="1" max="4" class="mg-score mg-magnitude" /></td>
+            <td class="score-cell"><input type="number" min="1" max="4" class="mg-score mg-modif" /></td>
+            <td class="score-cell"><input type="number" min="1" max="4" class="mg-score mg-prev" /></td>
+            <td class="score-cell"><input type="number" min="1" max="4" class="mg-score mg-social" /></td>
+            <td class="total-cell mg-total">—</td>
+            <td><button type="button" class="remove-row" title="Remove row">✕</button></td>
+        `;
+        return tr;
+    }
+
+    function bindRow(tr) {
+        tr.querySelectorAll('.mg-score').forEach(inp => {
+            inp.addEventListener('input', () => {
+                const v = parseInt(inp.value, 10);
+                if (inp.value !== '') {
+                    if (isNaN(v) || v < 1) inp.value = 1;
+                    else if (v > 4) inp.value = 4;
+                }
+                updateTotal(tr);
+            });
+        });
+        tr.querySelector('.remove-row').addEventListener('click', () => {
+            const tb = document.getElementById('maglayaBody');
+            if (tb.rows.length > 1) {
+                tr.remove();
+            } else {
+                tr.querySelectorAll('input').forEach(i => { i.value = ''; });
+                updateTotal(tr);
+            }
+            window.CHQ.onChange && window.CHQ.onChange();
+        });
+    }
+
+    function updateTotal(tr) {
+        const n  = parseInt(tr.querySelector('.mg-nature').value) || 0;
+        const m  = parseInt(tr.querySelector('.mg-magnitude').value) || 0;
+        const mo = parseInt(tr.querySelector('.mg-modif').value) || 0;
+        const p  = parseInt(tr.querySelector('.mg-prev').value) || 0;
+        const s  = parseInt(tr.querySelector('.mg-social').value) || 0;
+        const total = (n * 2) + (m * 1) + (mo * 3) + (p * 4) + (s * 5);
+        tr.querySelector('.mg-total').textContent = total > 0 ? total : '—';
+    }
+
+    function addRow(data) {
+        const tb = document.getElementById('maglayaBody');
+        if (!tb) return;
+        const tr = makeRow();
+        tb.appendChild(tr);
+        if (data) {
+            tr.querySelector('.mg-problem').value = data.problem || '';
+            tr.querySelector('.mg-evidence').value = data.evidence || '';
+            tr.querySelector('.mg-nature').value = data.nature || '';
+            tr.querySelector('.mg-magnitude').value = data.magnitude || '';
+            tr.querySelector('.mg-modif').value = data.modif || '';
+            tr.querySelector('.mg-prev').value = data.prev || '';
+            tr.querySelector('.mg-social').value = data.social || '';
+            updateTotal(tr);
+        }
+        bindRow(tr);
+        return tr;
+    }
+
+    function reset(seed) {
+        const tb = document.getElementById('maglayaBody');
+        if (!tb) return;
+        tb.innerHTML = '';
+        rowCounter = 0;
+        const n = typeof seed === 'number' ? seed : 5;
+        for (let i = 0; i < n; i++) addRow();
+    }
+
+    function getRows() {
+        const rows = [];
+        document.querySelectorAll('#maglayaBody tr').forEach(tr => {
+            const row = {
+                problem: tr.querySelector('.mg-problem').value,
+                evidence: tr.querySelector('.mg-evidence').value,
+                nature: tr.querySelector('.mg-nature').value,
+                magnitude: tr.querySelector('.mg-magnitude').value,
+                modif: tr.querySelector('.mg-modif').value,
+                prev: tr.querySelector('.mg-prev').value,
+                social: tr.querySelector('.mg-social').value
+            };
+            if (Object.values(row).some(v => v && String(v).trim() !== '')) {
+                rows.push(row);
+            }
+        });
+        return rows;
+    }
+
+    function setRows(rows) {
+        const tb = document.getElementById('maglayaBody');
+        if (!tb) return;
+        tb.innerHTML = '';
+        rowCounter = 0;
+        if (!Array.isArray(rows) || rows.length === 0) {
+            for (let i = 0; i < 5; i++) addRow();
+            return;
+        }
+        rows.forEach(r => addRow(r));
+    }
+
+    function init() {
+        reset(5);
+    }
+
+    window.CHQ.maglaya = { init, addRow, reset, getRows, setRows };
+})();window.CHQ = window.CHQ || {};
+
+(function () {
+    const { getPref, setPref, UI_KEY } = window.CHQ.storage;
+
+    const STEP_ICONS = {
+        s0: '📋', s1: '👥', s2: '📊', s3: '🦠', s4: '💊',
+        s5: '🤱', s6: '💉', s7: '🍎', s8: '💧', s9: '🧠',
+        s10: '🏥', s11: '🚪', s12: '🎯', s13: '📐'
+    };
+
+    let activeId = null;
+
+    function getSections() {
+        return Array.from(document.querySelectorAll('.form-section[data-section-id]'));
+    }
+
+    function escapeHtml(s) {
+        return String(s == null ? '' : s)
+            .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    // ─── Build sidebar nav items ───
+    function buildNav() {
+        const navList = document.getElementById('navList');
+        if (!navList) return;
+        const sections = getSections();
+        navList.innerHTML = sections.map((s, i) => {
+            const id = s.dataset.sectionId;
+            const num = s.dataset.sectionNum || (i + 1);
+            const title = s.dataset.sectionTitle || '';
+            const icon = STEP_ICONS[id] || '•';
+            return `
+                <button type="button" class="nav-item" data-target="${id}">
+                    <span class="nav-num">${escapeHtml(num)}</span>
+                    <span class="nav-icon">${icon}</span>
+                    <span class="nav-label">${escapeHtml(title)}</span>
+                </button>
+            `;
+        }).join('');
+
+        navList.querySelectorAll('.nav-item').forEach(btn => {
+            btn.addEventListener('click', () => {
+                activate(btn.dataset.target);
+                if (window.innerWidth <= 900) closeMobileNav();
+            });
+        });
+    }
+
+    // ─── Add step counter to section titles (guided mode only) ───
+    function ensureStepMeta() {
+        const sections = getSections();
+        const total = sections.length;
+        sections.forEach((sec, i) => {
+            const titleEl = sec.querySelector('.form-section-title');
+            if (!titleEl || titleEl.dataset.stepEnhanced) return;
+            titleEl.dataset.stepEnhanced = '1';
+            const counter = document.createElement('span');
+            counter.className = 'step-counter';
+            counter.textContent = `${i + 1} / ${total}`;
+            titleEl.appendChild(counter);
+        });
+    }
+
+    // ─── Activate a section ───
+    function activate(id) {
+        const sections = getSections();
+        if (!sections.some(s => s.dataset.sectionId === id)) return;
+        activeId = id;
+        sections.forEach(s => s.classList.toggle('active', s.dataset.sectionId === id));
+        document.querySelectorAll('.nav-item').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.target === id);
+        });
+        updateFloatingActions();
+        if (document.documentElement.getAttribute('data-ui') === 'guided') {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    }
+
+    function next() {
+        const sections = getSections();
+        const idx = sections.findIndex(s => s.dataset.sectionId === activeId);
+        if (idx >= 0 && idx < sections.length - 1) {
+            activate(sections[idx + 1].dataset.sectionId);
+        } else if (idx === sections.length - 1) {
+            window.CHQ.showToast('✅ All sections visited — click DOCX to export.', 4000);
+        }
+    }
+
+    function prev() {
+        const sections = getSections();
+        const idx = sections.findIndex(s => s.dataset.sectionId === activeId);
+        if (idx > 0) activate(sections[idx - 1].dataset.sectionId);
+    }
+
+    // ─── Floating action buttons ───
+    function updateFloatingActions() {
+        const sections = getSections();
+        const idx = sections.findIndex(s => s.dataset.sectionId === activeId);
+        const prevBtn = document.getElementById('guidedPrevBtn');
+        const nextBtn = document.getElementById('guidedNextBtn');
+        const label = document.getElementById('guidedNextLabel');
+        if (!prevBtn || !nextBtn || !label) return;
+
+        prevBtn.disabled = idx <= 0;
+
+        if (idx >= 0 && idx < sections.length - 1) {
+            label.textContent = `Proceed to ${sections[idx + 1].dataset.sectionTitle || 'next'}`;
+            nextBtn.classList.remove('complete');
+            nextBtn.textContent = '→';
+        } else {
+            label.textContent = 'All sections complete — Export DOCX';
+            nextBtn.classList.add('complete');
+            nextBtn.textContent = '✓';
+        }
+    }
+
+    // ─── Is a section filled? ───
+    function isSectionFilled(section) {
+        const inputs = section.querySelectorAll(
+            'input[type="text"], input[type="number"], input[type="date"], textarea'
+        );
+        for (const el of inputs) {
+            if (el.value && el.value.trim() !== '') return true;
+        }
+        if (section.querySelector('.chip-group input:checked')) return true;
+        const mg = section.querySelectorAll('.mg-problem, .mg-evidence');
+        for (const el of mg) if (el.value && el.value.trim() !== '') return true;
+        return false;
+    }
+
+    // ─── Progress bar + filled indicators ───
+    function refreshProgress() {
+        const sections = getSections();
+        let filled = 0;
+        sections.forEach(s => {
+            const isFilled = isSectionFilled(s);
+            if (isFilled) filled++;
+            const navBtn = document.querySelector(`.nav-item[data-target="${s.dataset.sectionId}"]`);
+            if (navBtn) navBtn.classList.toggle('filled', isFilled);
+        });
+        const pct = sections.length ? Math.round((filled / sections.length) * 100) : 0;
+        const fill = document.getElementById('navProgressFill');
+        const text = document.getElementById('navProgressText');
+        if (fill) fill.style.width = pct + '%';
+        if (text) text.textContent = `${filled} / ${sections.length}`;
+    }
+
+    // ─── Sidebar collapse ───
+    function toggleSidebarCollapse() {
+        const html = document.documentElement;
+        const isCollapsed = html.classList.toggle('guided-sb-collapsed');
+        setPref('chq:sidebar:v1', isCollapsed ? 'collapsed' : 'expanded');
+    }
+
+    // ─── Mobile nav ───
+    function openMobileNav() {
+        document.documentElement.classList.add('nav-mobile-open');
+    }
+    function closeMobileNav() {
+        document.documentElement.classList.remove('nav-mobile-open');
+    }
+
+    // ─── UI mode switching ───
+    function applyMode(mode) {
+        document.documentElement.setAttribute('data-ui', mode);
+
+        const btn = document.getElementById('uiToggleBtn');
+        if (btn) btn.textContent = mode === 'guided' ? '▤ Classic UI' : '▦ Guided UI';
+
+        if (mode === 'guided') {
+            ensureStepMeta();
+            if (!activeId) {
+                const first = getSections()[0];
+                if (first) activeId = first.dataset.sectionId;
+            }
+            activate(activeId);
+        }
+        refreshProgress();
+    }
+
+    function toggleMode() {
+        const current = document.documentElement.getAttribute('data-ui') || 'classic';
+        const next = current === 'guided' ? 'classic' : 'guided';
+        applyMode(next);
+        setPref(UI_KEY, next);
+
+        if (next === 'guided') {
+            window.CHQ.showToast('Guided mode active. Your data is untouched.', 3000);
+        }
+    }
+
+    // ─── Init ───
+    function init() {
+        buildNav();
+        ensureStepMeta();
+
+        // Restore sidebar collapse state
+        const sbState = getPref('chq:sidebar:v1', 'expanded');
+        if (sbState === 'collapsed') {
+            document.documentElement.classList.add('guided-sb-collapsed');
+        }
+
+        const saved = getPref(UI_KEY, 'classic');
+        applyMode(saved);
+
+        // Header UI toggle
+        const uiBtn = document.getElementById('uiToggleBtn');
+        if (uiBtn) uiBtn.addEventListener('click', toggleMode);
+
+        // Sidebar collapse button
+        const collapseBtn = document.getElementById('navCollapseBtn');
+        if (collapseBtn) collapseBtn.addEventListener('click', toggleSidebarCollapse);
+
+        // Sidebar print button
+        const printBtn = document.getElementById('sidebarPrintBtn');
+        if (printBtn) printBtn.addEventListener('click', () => window.print());
+
+        // Sidebar reset button
+        const resetBtn = document.getElementById('sidebarResetBtn');
+        if (resetBtn) resetBtn.addEventListener('click', () => window.CHQ.reset());
+
+        // Mobile menu button
+        const mobBtn = document.getElementById('mobileMenuBtn');
+        if (mobBtn) mobBtn.addEventListener('click', openMobileNav);
+
+        // Backdrop click closes mobile nav
+        const backdrop = document.getElementById('navBackdrop');
+        if (backdrop) backdrop.addEventListener('click', closeMobileNav);
+
+        // Floating actions
+        const gPrev = document.getElementById('guidedPrevBtn');
+        const gNext = document.getElementById('guidedNextBtn');
+        if (gPrev) gPrev.addEventListener('click', prev);
+        if (gNext) gNext.addEventListener('click', next);
+
+        // Keyboard shortcuts (guided mode only)
+        document.addEventListener('keydown', e => {
+            if (document.documentElement.getAttribute('data-ui') !== 'guided') return;
+            const tag = (e.target.tagName || '').toLowerCase();
+            if (tag === 'input' || tag === 'textarea' || tag === 'select') return;
+            if (e.key === 'ArrowRight') { next(); e.preventDefault(); }
+            if (e.key === 'ArrowLeft')  { prev(); e.preventDefault(); }
+            if (e.key === 'Escape')     { closeMobileNav(); }
+        });
+
+        refreshProgress();
+    }
+
+    window.CHQ.ui = {
+        init, applyMode, toggleMode,
+        activate, next, prev,
+        refreshProgress, updateFloatingActions,
+        openMobileNav, closeMobileNav
+    };
+})();window.CHQ = window.CHQ || {};
+
+(function () {
+    // ─── XML helpers ───
+    function esc(str) {
+        return String(str == null ? '' : str)
+            .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;').replace(/'/g, '&apos;');
+    }
+    function heading(text) {
+        return `<w:p><w:pPr><w:spacing w:before="280" w:after="120"/><w:rPr><w:b/><w:color w:val="A13D2C"/><w:sz w:val="28"/></w:rPr></w:pPr><w:r><w:rPr><w:b/><w:color w:val="A13D2C"/><w:sz w:val="28"/></w:rPr><w:t xml:space="preserve">${esc(text)}</w:t></w:r></w:p>`;
+    }
+    function field(label, value) {
+        const display = (value && String(value).trim()) ? value : '—';
+        const lines = String(display).split('\n');
+        let runs = `<w:r><w:rPr><w:b/></w:rPr><w:t xml:space="preserve">${esc(label)}: </w:t></w:r>`;
+        lines.forEach((line, i) => {
+            runs += `<w:r><w:t xml:space="preserve">${esc(line)}</w:t></w:r>`;
+            if (i < lines.length - 1) runs += `<w:br/>`;
+        });
+        return `<w:p><w:pPr><w:spacing w:after="80"/></w:pPr>${runs}</w:p>`;
+    }
+    function title(text) {
+        return `<w:p><w:pPr><w:spacing w:after="200"/><w:jc w:val="center"/><w:rPr><w:b/><w:color w:val="0A0E1A"/><w:sz w:val="36"/></w:rPr></w:pPr><w:r><w:rPr><w:b/><w:color w:val="0A0E1A"/><w:sz w:val="36"/></w:rPr><w:t xml:space="preserve">${esc(text)}</w:t></w:r></w:p>`;
+    }
+
+    // ─── Row label maps (must match index.html tables) ───
+    const PROFILE_ROWS = [
+        'Total population','Total households','Children <1 year','Children 1–4 years',
+        'Children 5–9 years','Adolescents','Adults','Older adults ≥60 years',
+        'Pregnant women','Persons with disability'
+    ];
+    const COMM_ROWS = ['Tuberculosis','Dengue','Diarrhea','Acute respiratory infections','Skin infections'];
+    const NCD_ROWS  = ['Hypertension','Diabetes mellitus','Heart disease','Stroke','Cancer','Asthma/COPD','Chronic kidney disease','Other'];
+    const MCH_ROWS  = ['Pregnant women registered','Pregnant women with adequate prenatal visits','High-risk pregnancies','Facility-based deliveries','Home deliveries','Postnatal visits','Maternal deaths','Infant deaths','Under-five deaths'];
+
+    function chipDisplay(data, field) {
+        const vals = Array.isArray(data[field]) ? data[field].slice() : [];
+        const other = (data[field + '__other'] || '').trim();
+        return vals.map(v => v === 'Other' && other ? `Other: ${other}` : v).join(', ');
+    }
+
+    async function generate(ev) {
+        const btn = ev && ev.currentTarget ? ev.currentTarget : null;
+        const original = btn ? btn.innerHTML : null;
+        if (btn) {
+            btn.classList.add('loading');
+            btn.innerHTML = '<span class="spinner"></span>Generating…';
+        }
+        try {
+            const data = window.CHQ.storage.serialize();
+            let body = '';
+            body += title('Community Health Center Data-Gathering Questionnaire');
+            body += `<w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="200"/></w:pPr><w:r><w:rPr><w:i/><w:color w:val="555555"/></w:rPr><w:t xml:space="preserve">For Community Health Nursing Assessment and Maglaya Health Problem Prioritization</w:t></w:r></w:p>`;
+
+            body += heading('Respondent / Key Informant');
+            body += field('Health Center / Barangay', data.fCenter);
+            body += field('Purok / Sitio Covered', data.fPurok);
+            body += field('Respondent / Position', chipDisplay(data, 'respondent'));
+            body += field('Date / Period Covered', data.fPeriod);
+
+            body += heading('I. Community Profile');
+            PROFILE_ROWS.forEach((label, i) => { body += field(label, data['prof' + i]); });
+            body += field('Vulnerable groups', chipDisplay(data, 'vulnerableGroups'));
+
+            body += heading('II. General Health Status');
+            for (let i = 1; i <= 5; i++) {
+                body += field(`Rank ${i}`, `${data['gh' + i] || '—'}  (${data['gh' + i + 'n'] || '—'})`);
+            }
+            body += field('Trend vs. previous year', chipDisplay(data, 'ghTrend'));
+            body += field('Affects greatest number of people', data.ghMost);
+            body += field('Most serious problem', data.ghSerious);
+
+            body += heading('III. Communicable Diseases');
+            COMM_ROWS.forEach((label, i) => {
+                const c = data['comm' + i + '_cases'] || '—';
+                const inc = document.querySelector(`input[name="comm${i}_trend"][value="Increasing"]`)?.checked ? 'Increasing' : '';
+                const dec = document.querySelector(`input[name="comm${i}_trend"][value="Decreasing"]`)?.checked ? 'Decreasing' : '';
+                body += field(label, `Cases: ${c} | ${inc || dec || '—'}`);
+            });
+            body += field('Outbreak or unusual increase?', chipDisplay(data, 'outbreak'));
+            body += field('If yes, specify', data.outbreakDetail);
+
+            body += heading('IV. Noncommunicable Diseases');
+            NCD_ROWS.forEach((c, i) => { body += field(c, data['ncd' + i]); });
+            body += field('Biggest NCD concern', data.ncdConcern);
+            body += field('Screening services available', chipDisplay(data, 'ncdScreening'));
+            body += field('Common risk factors', chipDisplay(data, 'ncdRisk'));
+
+            body += heading('V. Maternal & Child Health');
+            MCH_ROWS.forEach((label, i) => { body += field(label, data['mch' + i]); });
+            body += field('Common maternal/child health concerns', chipDisplay(data, 'mchConcerns'));
+
+            body += heading('VI. Immunization');
+            body += field('Immunization status of children', chipDisplay(data, 'immStatus'));
+            body += field('Reasons for missed vaccinations', chipDisplay(data, 'immMissed'));
+
+            body += heading('VII. Nutrition');
+            body += field('Nutrition problems present', chipDisplay(data, 'nutProblems'));
+            body += field('Underweight (n)', data.nutUnder);
+            body += field('Wasted (n)', data.nutWasted);
+            body += field('Stunted (n)', data.nutStunted);
+            body += field('Overweight/obese (n)', data.nutOver);
+            body += field('Nutrition programs available', chipDisplay(data, 'nutPrograms'));
+            body += field('Major nutrition concern', data.nutConcern);
+
+            body += heading('VIII. Water, Sanitation & Environment');
+            body += field('Main water sources', chipDisplay(data, 'waterSources'));
+            body += field('Major environmental concerns', chipDisplay(data, 'envConcerns'));
+            body += field('Most concerning environmental problem', data.envMost);
+            body += field('Environmental health programs implemented?', chipDisplay(data, 'envPrograms'));
+
+            body += heading('IX. Mental & Social Health');
+            body += field('Mental/social concerns observed', chipDisplay(data, 'mentalConcerns'));
+            body += field('Mental health services available', chipDisplay(data, 'mentalServices'));
+            body += field('Major mental/social health concern', data.mentalMajor);
+
+            body += heading('X. Health Services & Resources');
+            body += field('Services available', chipDisplay(data, 'servicesAvail'));
+            body += field('Health personnel available', data.personnel);
+            body += field('Resources lacking', chipDisplay(data, 'resourcesLacking'));
+
+            body += heading('XI. Access to Healthcare');
+            body += field('Barriers to healthcare', chipDisplay(data, 'barriers'));
+            body += field('Referrals to other facilities?', chipDisplay(data, 'referrals'));
+            body += field('If yes, common reasons', data.referralReasons);
+            body += field('Health services still needed', data.neededServices);
+
+            body += heading("XII. Health Center's Perception of Community Priorities");
+            body += field('Three most important health problems', data.top3);
+            body += field('Affects the largest number of people', data.affectsMost);
+            body += field('Most easily modified/addressed', data.mostModifiable);
+            body += field('Greatest potential for prevention', data.mostPreventable);
+            body += field('Urgent community concern', data.mostUrgent);
+            body += field('Requires most additional resources', data.mostResource);
+
+            body += heading('XIII. Maglaya Health Problem Prioritization Worksheet');
+            body += `<w:p><w:pPr><w:spacing w:after="80"/></w:pPr><w:r><w:rPr><w:i/><w:color w:val="555555"/><w:sz w:val="18"/></w:rPr><w:t xml:space="preserve">Total = (Nature × 2) + (Magnitude × 1) + (Modifiability × 3) + (Preventive × 4) + (Social × 5) — max 60</w:t></w:r></w:p>`;
+            const rows = Array.isArray(data.__maglaya) ? data.__maglaya : [];
+            if (rows.length === 0) {
+                body += field('Problems', '—');
+            } else {
+                rows.forEach(r => {
+                    const n = r.nature || '—';
+                    const m = r.magnitude || '—';
+                    const mo = r.modif || '—';
+                    const p = r.prev || '—';
+                    const s = r.social || '—';
+                    const total = (parseInt(n) * 2 || 0) + (parseInt(m) || 0) + (parseInt(mo) * 3 || 0) + (parseInt(p) * 4 || 0) + (parseInt(s) * 5 || 0);
+                    body += field(r.problem || 'Problem',
+                        `Evidence: ${r.evidence || '—'} | Nature: ${n} | Magnitude: ${m} | Modifiability: ${mo} | Preventive: ${p} | Social: ${s} | Total: ${total || '—'}`);
+                });
+            }
+
+            // ─── Package ───
+            const documentXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
+<w:body>${body}<w:sectPr><w:pgSz w:w="12240" w:h="15840"/><w:pgMar w:top="1080" w:right="1080" w:bottom="1080" w:left="1080"/></w:sectPr></w:body>
+</w:document>`;
+            const stylesXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:styles xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
+<w:docDefaults><w:rPrDefault><w:rPr><w:rFonts w:ascii="Calibri" w:hAnsi="Calibri"/><w:sz w:val="22"/></w:rPr></w:rPrDefault></w:docDefaults>
+<w:style w:type="paragraph" w:default="1" w:styleId="Normal"><w:name w:val="Normal"/></w:style>
+</w:styles>`;
+            const contentTypesXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
+<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>
+<Default Extension="xml" ContentType="application/xml"/>
+<Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/>
+<Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/>
+</Types>`;
+            const rootRelsXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/>
+</Relationships>`;
+            const docRelsXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>
+</Relationships>`;
+
+            const zip = new JSZip();
+            zip.file('[Content_Types].xml', contentTypesXml);
+            zip.folder('_rels').file('.rels', rootRelsXml);
+            const word = zip.folder('word');
+            word.file('document.xml', documentXml);
+            word.file('styles.xml', stylesXml);
+            word.folder('_rels').file('document.xml.rels', docRelsXml);
+
+            const blob = await zip.generateAsync({
+                type: 'blob',
+                mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+            });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            const nameBase = (data.fCenter || 'Community_Health_Questionnaire').replace(/[^a-z0-9]+/gi, '_');
+            a.href = url;
+            a.download = `${nameBase}.docx`;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            URL.revokeObjectURL(url);
+            window.CHQ.showToast('DOCX generated ✓');
+        } catch (err) {
+            console.error(err);
+            window.CHQ.showToast('Error generating DOCX: ' + err.message);
+        } finally {
+            if (btn) {
+                btn.classList.remove('loading');
+                btn.innerHTML = original;
+            }
+        }
+    }
+
+    window.CHQ.docx = { generate };
+})();window.CHQ = window.CHQ || {};
+
+(function () {
+    // ─── Toast ───
+    let toastTimer = null;
+    function showToast(msg, duration = 3500) {
+        const el = document.getElementById('toast');
+        const text = document.getElementById('toastMsg');
+        if (!el || !text) return;
+        text.textContent = msg;
+        el.classList.add('show');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => el.classList.remove('show'), duration);
+    }
+    function hideToast() {
+        const el = document.getElementById('toast');
+        if (el) el.classList.remove('show');
+        clearTimeout(toastTimer);
+    }
+    window.CHQ.showToast = showToast;
+    window.CHQ.hideToast = hideToast;
+
+    // ─── Build static tables ───
+    function buildStaticTables() {
+        const profileRows = [
+            'Total population','Total households','Children <1 year','Children 1–4 years',
+            'Children 5–9 years','Adolescents','Adults','Older adults ≥60 years',
+            'Pregnant women','Persons with disability'
+        ];
+        const tbP = document.getElementById('profileTableBody');
+        if (tbP) {
+            tbP.innerHTML = profileRows.map((label, i) =>
+                `<tr><td class="row-label">${label}</td><td><input id="prof${i}" placeholder="value" /></td></tr>`
+            ).join('');
+        }
+
+        const commRows = ['Tuberculosis','Dengue','Diarrhea','Acute respiratory infections','Skin infections'];
+        const tbC = document.getElementById('commTableBody');
+        if (tbC) {
+            tbC.innerHTML = commRows.map((d, i) =>
+                `<tr>
+                    <td class="row-label">${d}</td>
+                    <td class="num"><input id="comm${i}_cases" type="number" placeholder="n" /></td>
+                    <td class="radio-cell"><input type="radio" name="comm${i}_trend" value="Increasing" /></td>
+                    <td class="radio-cell"><input type="radio" name="comm${i}_trend" value="Decreasing" /></td>
+                </tr>`
+            ).join('');
+        }
+
+        const ncdRows = ['Hypertension','Diabetes mellitus','Heart disease','Stroke','Cancer','Asthma/COPD','Chronic kidney disease','Other'];
+        const tbN = document.getElementById('ncdTableBody');
+        if (tbN) {
+            tbN.innerHTML = ncdRows.map((c, i) =>
+                `<tr><td class="row-label">${c}</td><td><input id="ncd${i}" placeholder="n / rate" /></td></tr>`
+            ).join('');
+        }
+
+        const mchRows = ['Pregnant women registered','Pregnant women with adequate prenatal visits','High-risk pregnancies','Facility-based deliveries','Home deliveries','Postnatal visits','Maternal deaths','Infant deaths','Under-five deaths'];
+        const tbM = document.getElementById('mchTableBody');
+        if (tbM) {
+            tbM.innerHTML = mchRows.map((label, i) =>
+                `<tr><td class="row-label">${label}</td><td><input id="mch${i}" placeholder="n / %" /></td></tr>`
+            ).join('');
+        }
+    }
+
+    // ─── Save indicator ───
+    let saveIndicatorTimer = null;
+    function flashSaveIndicator() {
+        const pill = document.getElementById('savePill');
+        const text = document.getElementById('saveText');
+        if (!pill || !text) return;
+        pill.classList.add('saving');
+        text.textContent = 'Saving…';
+        clearTimeout(saveIndicatorTimer);
+        saveIndicatorTimer = setTimeout(() => {
+            pill.classList.remove('saving');
+            text.textContent = 'Saved';
+        }, 450);
+    }
+
+    // ─── Autosave ───
+    let saveTimer = null;
+    function scheduleSave() {
+        clearTimeout(saveTimer);
+        saveTimer = setTimeout(() => {
+            window.CHQ.storage.saveNow();
+            flashSaveIndicator();
+            window.CHQ.ui && window.CHQ.ui.refreshProgress();
+        }, 300);
+    }
+    window.CHQ.onChange = scheduleSave;
+
+    // ─── Reset ───
+    function resetForm() {
+        if (!confirm('Clear all form fields? This cannot be undone.')) return;
+        document.querySelectorAll('#chForm input, #chForm textarea').forEach(el => {
+            if (el.type === 'checkbox' || el.type === 'radio') el.checked = false;
+            else el.value = '';
+        });
+        if (window.CHQ.maglaya) window.CHQ.maglaya.reset(5);
+        window.CHQ.storage.clear();
+
+        // Reset UI back to first section
+        const first = document.querySelector('.form-section[data-section-id]');
+        if (first && window.CHQ.ui) {
+            window.CHQ.ui.activate(first.dataset.sectionId);
+        }
+        window.CHQ.ui && window.CHQ.ui.refreshProgress();
+        showToast('Form reset. Local cache cleared.');
+    }
+    window.CHQ.reset = resetForm;
+
+    // ─── Wire autosave ───
+    function bindAutosave() {
+        const form = document.getElementById('chForm');
+        if (!form) return;
+        form.addEventListener('input', scheduleSave, { passive: true });
+        form.addEventListener('change', scheduleSave, { passive: true });
+    }
+
+    // ─── Scroll top ───
+    function bindScrollTop() {
+        const btn = document.getElementById('scrollTopBtn');
+        if (!btn) return;
+        window.addEventListener('scroll', () => {
+            btn.classList.toggle('visible', window.scrollY > 400);
+        }, { passive: true });
+    }
+
+    // ─── Boot ───
+    function boot() {
+        buildStaticTables();
+        window.CHQ.maglaya.init();
+        window.CHQ.theme.init();
+        window.CHQ.ui.init();
+
+        const cached = window.CHQ.storage.load();
+        if (cached) {
+            window.CHQ.storage.deserialize(cached);
+            showToast('Restored saved progress from this device.');
+        }
+
+        bindAutosave();
+        bindScrollTop();
+        window.CHQ.ui.refreshProgress();
+        window.CHQ.ui.updateFloatingActions();
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', boot);
+    } else {
+        boot();
+    }
+})();</script>
 </body>
 </html>
