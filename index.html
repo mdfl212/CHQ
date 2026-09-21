@@ -116,16 +116,15 @@ body::before {
     opacity: 0; pointer-events: none;
 }
 .scroll-top.visible { opacity: 1; pointer-events: all; }
-.scroll-top:hover {
-    border-color: var(--accent); color: var(--accent);
-    background: var(--accent-dim);
-}
+.scroll-top:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
 
 @media (max-width: 700px) {
     body { padding: 0 12px 40px; }
     .site-header { flex-direction: column; align-items: flex-start; }
     .header-actions { width: 100%; }
-}/* ─── BUTTONS ─── */
+}
+
+/* ─── BUTTONS ─── */
 .btn {
     padding: 8px 16px; border-radius: var(--radius);
     border: 1px solid var(--border2); background: transparent;
@@ -137,6 +136,8 @@ body::before {
 .btn.primary { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
 .btn.blue { background: var(--banner); border-color: var(--banner); color: #fff; font-weight: 600; }
 .btn.blue:hover { background: #b8482f; border-color: #b8482f; color: #fff; }
+.btn.green { background: var(--ok); border-color: var(--ok); color: #fff; font-weight: 600; }
+.btn.green:hover { background: #26452a; border-color: #26452a; color: #fff; }
 .btn.danger:hover { border-color: var(--danger); color: var(--danger); background: rgba(227, 91, 91, 0.12); }
 .btn.loading { pointer-events: none; opacity: 0.7; }
 .btn.theme-toggle, .btn.ui-toggle { display: flex; align-items: center; gap: 6px; }
@@ -266,44 +267,6 @@ textarea { resize: vertical; min-height: 44px; font-size: 13px; line-height: 1.5
     accent-color: var(--accent); width: 15px; height: 15px; cursor: pointer;
 }
 
-/* ─── MAGLAYA ─── */
-.maglaya-table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
-.maglaya-table th, .maglaya-table td {
-    border: 1px solid var(--border2); padding: 4px 6px;
-    text-align: center; vertical-align: top;
-}
-.maglaya-table th {
-    background: var(--headShade);
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 9px; letter-spacing: 0.06em;
-    text-transform: uppercase; color: var(--subhead);
-    font-weight: 600; padding: 8px 4px;
-}
-[data-theme="night"] .maglaya-table th { background: var(--bg4); }
-.maglaya-table th .w { display: block; font-size: 8.5px; color: var(--text3); font-weight: 400; margin-top: 2px; }
-.maglaya-table td input {
-    width: 100%; background: transparent; border: none;
-    text-align: center; padding: 4px 3px;
-    font-size: 12.5px; color: var(--text);
-}
-.maglaya-table td input[type="text"] { text-align: left; }
-.maglaya-table td input:focus { background: var(--bg4); border-radius: 3px; }
-.maglaya-table .problem-cell { min-width: 160px; }
-.maglaya-table .evidence-cell { min-width: 160px; }
-.maglaya-table .score-cell { width: 55px; }
-.maglaya-table .total-cell {
-    background: var(--accent-dim);
-    font-family: 'JetBrains Mono', monospace;
-    font-weight: 700; color: var(--banner); font-size: 13px;
-    width: 60px; text-align: center; vertical-align: middle;
-}
-[data-theme="night"] .maglaya-table .total-cell { color: var(--accent); }
-.maglaya-table .remove-row {
-    background: none; border: none; color: var(--text3);
-    cursor: pointer; font-size: 15px; line-height: 1; padding: 2px 4px;
-}
-.maglaya-table .remove-row:hover { color: var(--danger); }
-
 /* ─── QUESTION / HOWTO ─── */
 .q { font-weight: 600; color: var(--text); font-size: 14px; margin: 14px 0 6px; }
 .q .qn { font-family: 'JetBrains Mono', monospace; color: var(--accent); font-size: 12.5px; margin-right: 4px; }
@@ -345,6 +308,107 @@ textarea { resize: vertical; min-height: 44px; font-size: 13px; line-height: 1.5
 .mt-8 { margin-top: 8px; }
 .mt-12 { margin-top: 12px; }
 
+/* ─── SECTION NOTES ─── */
+.section-notes {
+    margin-top: 18px; padding-top: 14px;
+    border-top: 1px dashed var(--border2);
+}
+.section-notes-label {
+    font-family: 'JetBrains Mono', monospace; font-size: 9.5px;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 5px;
+}
+.section-notes-label::before { content: '✎ '; }
+.section-notes textarea {
+    font-style: italic; color: var(--text2);
+    background: var(--bg3); border-style: dashed;
+}
+.section-notes textarea:focus { font-style: normal; color: var(--text); border-style: solid; }
+
+/* ─── VOICE FAB ─── */
+.voice-fab {
+    position: fixed; bottom: 24px; left: 24px;
+    z-index: 400;
+}
+[data-ui="guided"] .voice-fab { left: calc(var(--sb-current, 240px) + 16px); }
+@media (max-width: 900px) {
+    [data-ui="guided"] .voice-fab { left: 16px; }
+}
+.voice-fab-btn {
+    width: 52px; height: 52px; border-radius: 50%;
+    background: var(--bg2); border: 2px solid var(--border2);
+    color: var(--text2); font-size: 22px;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    box-shadow: var(--shadow); transition: all 0.2s;
+}
+.voice-fab-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
+.voice-fab-btn.listening { border-color: #e35b5b; color: #e35b5b; animation: micpulse 1.2s ease infinite; }
+.voice-fab-btn.disabled-mic { opacity: 0.45; cursor: not-allowed; }
+@keyframes micpulse { 0%,100%{box-shadow:0 0 0 0 rgba(227,91,91,0.35)} 50%{box-shadow:0 0 0 10px rgba(227,91,91,0)} }
+
+/* ─── VOICE PANEL ─── */
+.voice-panel {
+    position: absolute; bottom: 62px; left: 0;
+    width: 320px; background: var(--bg2);
+    border: 1px solid var(--border2); border-radius: var(--radius-lg);
+    box-shadow: var(--shadow); padding: 14px;
+    display: none; flex-direction: column; gap: 10px;
+    z-index: 401;
+}
+.voice-panel.open { display: flex; }
+.voice-panel-header {
+    display: flex; align-items: center; gap: 8px;
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    letter-spacing: 0.1em; text-transform: uppercase; color: var(--text2);
+    padding-bottom: 8px; border-bottom: 1px solid var(--border);
+}
+.voice-status-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--text3); flex-shrink: 0; transition: background 0.3s;
+}
+.voice-status-dot.active { background: #e35b5b; animation: pulse 1s ease infinite; }
+.voice-panel-header .close-panel {
+    margin-left: auto; background: none; border: none;
+    color: var(--text3); cursor: pointer; font-size: 16px; line-height: 1;
+}
+.voice-transcript {
+    min-height: 40px; max-height: 80px; overflow-y: auto;
+    font-size: 12.5px; color: var(--text2); font-style: italic;
+    background: var(--bg3); border-radius: var(--radius); padding: 6px 10px;
+    line-height: 1.5;
+}
+.voice-transcript .interim { color: var(--text3); }
+.scratch-label {
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: 'JetBrains Mono', monospace; font-size: 9px;
+    letter-spacing: 0.1em; text-transform: uppercase; color: var(--text3);
+}
+.scratch-counter { font-size: 9px; color: var(--text3); }
+#voiceScratchpad {
+    min-height: 90px; resize: vertical;
+    font-size: 12.5px; line-height: 1.55;
+}
+.voice-btns {
+    display: flex; gap: 6px; flex-wrap: wrap;
+}
+.voice-btns .btn { padding: 6px 10px; font-size: 10px; }
+.voice-hint {
+    font-size: 10.5px; color: var(--text3); font-style: italic;
+    line-height: 1.5; padding-top: 4px; border-top: 1px dashed var(--border2);
+}
+.voice-hint code {
+    font-family: 'JetBrains Mono', monospace; font-size: 9.5px;
+    background: var(--bg3); padding: 1px 5px; border-radius: 3px;
+}
+
+/* ─── FIELD FLASH ─── */
+@keyframes fieldFlash {
+    0% { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-dim); }
+    70% { border-color: var(--accent); box-shadow: 0 0 0 6px rgba(161,61,44,0); }
+    100% { border-color: var(--border2); box-shadow: none; }
+}
+.field-flash { animation: fieldFlash 0.9s ease forwards; }
+
 /* ─── PRINT ─── */
 @media print {
     :root, [data-theme="day"], [data-theme="night"] {
@@ -363,7 +427,8 @@ textarea { resize: vertical; min-height: 44px; font-size: 13px; line-height: 1.5
     .site-header { padding: 0 0 12px; margin-bottom: 16px; }
     .site-header::after { display: none; }
     .header-actions, .scroll-top, .toast, .howto, .btn,
-    .chip-other-input, .section-nav, .save-pill { display: none !important; }
+    .chip-other-input, .section-nav, .save-pill,
+    .voice-fab, .voice-panel { display: none !important; }
     .form-section {
         box-shadow: none; page-break-inside: avoid;
         padding: 10px 12px; margin-bottom: 10px;
@@ -373,534 +438,9 @@ textarea { resize: vertical; min-height: 44px; font-size: 13px; line-height: 1.5
     .form-row { margin-bottom: 4px; gap: 6px 12px; }
     .q { margin: 8px 0 4px; font-size: 12px; }
     .data-table th, .data-table td { padding: 3px 5px; font-size: 10px; }
-    .maglaya-table th, .maglaya-table td { padding: 3px 4px; font-size: 9.5px; }
     input, textarea, select { background: transparent !important; border-color: rgba(0,0,0,0.25) !important; }
     .chip { border-color: rgba(0,0,0,0.3); background: transparent; }
-}
-
-/* ─── RESPONSIVE ─── */
-@media (max-width: 700px) {
-    .form-group.half, .form-group.third { flex: 1 0 100%; }
-    .form-row { gap: 8px; }
-    .form-section { padding: 14px 14px 18px; }
-    .maglaya-table { font-size: 10px; }
-    .maglaya-table th { font-size: 8px; padding: 4px 2px; }
-}/* ─── Classic = full-width stacked sections ─── */
-
-[data-ui="classic"] .section-nav,
-[data-ui="classic"] .guided-actions,
-[data-ui="classic"] .mobile-menu-btn,
-[data-ui="classic"] .nav-backdrop { display: none !important; }
-
-[data-ui="classic"] .app-shell { display: block; }
-[data-ui="classic"] .form-section { display: block; }
-[data-ui="classic"] .guided-step-meta { display: none; }/* ═══════════════════════════════════════════════════════════════
-   GUIDED UI — OB-GYN style stepper
-   Fixed collapsible sidebar · one section at a time · floating actions
-   ═══════════════════════════════════════════════════════════════ */
-
-/* Hidden in classic mode */
-.section-nav,
-.guided-actions,
-.mobile-menu-btn,
-.nav-backdrop { display: none; }
-
-/* ─── GUIDED MODE TOKENS ─── */
-[data-ui="guided"] {
-    --sb-width: 240px;
-    --sb-width-collapsed: 64px;
-    --sb-current: var(--sb-width);
-}
-[data-ui="guided"].guided-sb-collapsed {
-    --sb-current: var(--sb-width-collapsed);
-}
-
-/* ─── SIDEBAR ─── */
-[data-ui="guided"] .section-nav {
-    display: flex;
-    position: fixed;
-    top: 0; left: 0;
-    height: 100vh;
-    width: var(--sb-current);
-    background: var(--bg2);
-    border-right: 1px solid var(--border2);
-    z-index: 900;
-    flex-direction: column;
-    overflow: hidden;
-    transition: width .28s cubic-bezier(.4,0,.2,1);
-    box-shadow: 1px 0 3px rgba(0,0,0,.04);
-}
-
-/* ─── SIDEBAR HEADER ─── */
-[data-ui="guided"] .nav-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 16px 14px;
-    border-bottom: 1px solid var(--border);
-    flex-shrink: 0;
-}
-[data-ui="guided"] .nav-collapse {
-    width: 36px; height: 36px;
-    border-radius: 8px;
-    background: transparent;
-    border: 1px solid var(--border2);
-    color: var(--accent);
-    font-size: 16px;
-    cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    transition: all .18s ease;
-    flex-shrink: 0;
-}
-[data-ui="guided"] .nav-collapse:hover {
-    background: var(--accent-dim);
-    border-color: var(--accent);
-}
-[data-ui="guided"] .nav-brand {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px; letter-spacing: .16em;
-    text-transform: uppercase;
-    color: var(--accent);
-    white-space: nowrap;
-    font-weight: 600;
-    transition: opacity .15s;
-}
-[data-ui="guided"].guided-sb-collapsed .nav-brand { opacity: 0; }
-
-/* ─── PROGRESS ─── */
-[data-ui="guided"] .nav-progress {
-    padding: 14px 18px 10px;
-    flex-shrink: 0;
-    border-bottom: 1px solid var(--border);
-}
-[data-ui="guided"].guided-sb-collapsed .nav-progress { padding: 14px 12px 10px; }
-[data-ui="guided"] .nav-progress-label {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 9.5px; letter-spacing: .14em;
-    text-transform: uppercase;
-    color: var(--text3);
-    margin-bottom: 6px;
-    display: flex; justify-content: space-between;
-    white-space: nowrap; overflow: hidden;
-}
-[data-ui="guided"].guided-sb-collapsed .nav-progress-label { opacity: 0; height: 0; margin: 0; }
-[data-ui="guided"] .nav-progress-track {
-    height: 3px;
-    background: var(--bg4);
-    border-radius: 2px;
-    overflow: hidden;
-}
-[data-ui="guided"] .nav-progress-fill {
-    display: block;
-    height: 100%; width: 0%;
-    background: linear-gradient(90deg, var(--banner), var(--accent));
-    border-radius: 2px;
-    transition: width .35s ease;
-}
-
-/* ─── NAV LIST ─── */
-[data-ui="guided"] .nav-list {
-    list-style: none;
-    padding: 8px 8px 16px;
-    margin: 0;
-    flex: 1;
-    overflow-y: auto; overflow-x: hidden;
-    display: flex; flex-direction: column; gap: 2px;
-    scrollbar-width: thin;
-    scrollbar-color: var(--border2) transparent;
-}
-[data-ui="guided"] .nav-list::-webkit-scrollbar { width: 4px; }
-[data-ui="guided"] .nav-list::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
-
-[data-ui="guided"] .nav-item {
-    display: flex; align-items: center; gap: 12px;
-    padding: 9px 10px; border-radius: 8px;
-    color: var(--text2); font-size: 12px;
-    cursor: pointer; transition: all .18s ease;
-    white-space: nowrap; overflow: hidden;
-    border: 1px solid transparent;
-    background: transparent; width: 100%; text-align: left;
-    font-family: inherit;
-}
-[data-ui="guided"] .nav-item:hover {
-    background: var(--accent-dim);
-    color: var(--accent);
-}
-[data-ui="guided"] .nav-item.active {
-    background: var(--accent-dim);
-    color: var(--accent);
-    border-color: var(--border2);
-    font-weight: 600;
-}
-[data-ui="guided"] .nav-item.filled .nav-num {
-    background: var(--ok, #2F5233);
-    color: #ffffff;
-    border-color: var(--ok, #2F5233);
-}
-[data-ui="guided"] .nav-item.active .nav-num {
-    background: var(--accent);
-    color: var(--bg2);
-    border-color: var(--accent);
-    transform: scale(1.08);
-}
-
-[data-ui="guided"] .nav-num {
-    width: 24px; height: 24px; border-radius: 50%;
-    border: 1px solid var(--border2);
-    display: flex; align-items: center; justify-content: center;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px; font-weight: 600;
-    flex-shrink: 0;
-    color: var(--text2);
-    background: var(--bg3);
-    transition: all .18s;
-}
-[data-ui="guided"] .nav-icon {
-    font-size: 15px; line-height: 1; flex-shrink: 0;
-    display: none;
-}
-[data-ui="guided"].guided-sb-collapsed .nav-num { display: none; }
-[data-ui="guided"].guided-sb-collapsed .nav-icon { display: block; }
-[data-ui="guided"] .nav-label {
-    font-size: 12px; letter-spacing: .02em;
-    opacity: 1; transition: opacity .15s;
-    overflow: hidden; text-overflow: ellipsis;
-}
-[data-ui="guided"].guided-sb-collapsed .nav-label { opacity: 0; width: 0; }
-[data-ui="guided"].guided-sb-collapsed .nav-item {
-    justify-content: center;
-    padding: 10px 8px;
-}
-
-/* ─── SIDEBAR FOOTER ─── */
-[data-ui="guided"] .nav-footer {
-    padding: 10px 8px 14px;
-    border-top: 1px solid var(--border);
-    flex-shrink: 0;
-    display: flex; flex-direction: column; gap: 4px;
-}
-[data-ui="guided"] .nav-action {
-    display: flex; align-items: center; gap: 12px;
-    padding: 9px 10px; border-radius: 8px;
-    color: var(--text2); font-size: 12px;
-    cursor: pointer; transition: all .18s;
-    background: transparent; border: 1px solid transparent;
-    font-family: inherit; width: 100%; text-align: left;
-    white-space: nowrap; overflow: hidden;
-}
-[data-ui="guided"] .nav-action:hover {
-    background: var(--accent-dim);
-    color: var(--accent);
-    border-color: var(--border2);
-}
-[data-ui="guided"] .nav-action .nav-icon {
-    display: block; font-size: 15px; flex-shrink: 0;
-}
-[data-ui="guided"] .nav-action .nav-label { opacity: 1; }
-[data-ui="guided"].guided-sb-collapsed .nav-action {
-    justify-content: center;
-    padding: 10px 8px;
-}
-[data-ui="guided"].guided-sb-collapsed .nav-action .nav-label { opacity: 0; width: 0; }
-[data-ui="guided"] .reset-action { color: var(--danger); }
-[data-ui="guided"] .reset-action:hover {
-    background: rgba(227, 91, 91, 0.08);
-    border-color: rgba(227, 91, 91, 0.25);
-    color: var(--danger);
-}
-
-/* ─── MAIN LAYOUT ─── */
-[data-ui="guided"] .app-shell {
-    display: block;
-    padding-left: var(--sb-current);
-    transition: padding-left .28s cubic-bezier(.4,0,.2,1);
-}
-[data-ui="guided"] .app-main {
-    min-width: 0;
-    padding: 0 24px 140px;
-}
-[data-ui="guided"] .wrapper { max-width: 1040px; margin: 0 auto; }
-
-/* ─── HEADER (minimal in guided mode) ─── */
-[data-ui="guided"] .site-header {
-    padding: 24px 0 16px;
-    margin-bottom: 22px;
-}
-[data-ui="guided"] .header-title { font-size: clamp(20px, 2.4vw, 28px); }
-[data-ui="guided"] .header-actions > .btn { display: none; }
-[data-ui="guided"] .header-actions > .btn.ui-toggle { display: inline-flex; }
-[data-ui="guided"] .header-actions > .save-pill { display: inline-flex; }
-
-/* ─── ONE SECTION AT A TIME ─── */
-[data-ui="guided"] .form-section { display: none; }
-[data-ui="guided"] .form-section.active {
-    display: block;
-    animation: guidedFadeIn .35s ease-out;
-}
-@keyframes guidedFadeIn {
-    from { opacity: 0; transform: translateY(8px); }
-    to   { opacity: 1; transform: translateY(0); }
-}
-
-/* ─── SECTION CARD / STEP HEADER ─── */
-[data-ui="guided"] .form-section {
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 24px 28px 26px;
-    box-shadow: 0 1px 2px rgba(0,0,0,.04), 0 1px 3px rgba(0,0,0,.05);
-    border-top: none;
-    margin-bottom: 24px;
-    position: relative;
-    scroll-margin-top: 20px;
-}
-[data-ui="guided"] .form-section::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0; height: 3px;
-    background: linear-gradient(90deg, var(--banner), var(--accent));
-    border-radius: 10px 10px 0 0;
-}
-
-[data-ui="guided"] .form-section-title {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    flex-wrap: wrap;
-    margin-bottom: 20px;
-    padding-bottom: 12px;
-    border-bottom: 1px solid var(--border);
-    font-family: 'Playfair Display', serif;
-    font-size: 20px;
-    font-weight: 600;
-    color: var(--text);
-}
-[data-ui="guided"] .form-section-title .num {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    letter-spacing: .14em;
-    text-transform: uppercase;
-    background: var(--accent-dim);
-    color: var(--accent);
-    padding: 4px 12px;
-    border-radius: 20px;
-    border: 1px solid var(--border2);
-    font-weight: 600;
-    flex-shrink: 0;
-}
-[data-ui="guided"] .form-section-title .num::before {
-    content: 'STEP ';
-    opacity: .75;
-    margin-right: 2px;
-}
-[data-ui="guided"] .form-section-title .badge {
-    font-size: 9px;
-    letter-spacing: .14em;
-    background: var(--bg3);
-    color: var(--text3);
-    border: 1px solid var(--border);
-    padding: 2px 10px;
-    border-radius: 3px;
-    font-weight: 500;
-    margin-left: auto;
-}
-[data-ui="guided"] .form-section-title .step-counter {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    color: var(--text3);
-    letter-spacing: .1em;
-    margin-left: 8px;
-    flex-shrink: 0;
-}
-
-/* ─── FLOATING ACTION BUTTONS ─── */
-[data-ui="guided"] .guided-actions {
-    display: flex;
-    position: fixed;
-    bottom: 24px; right: 24px;
-    z-index: 1000;
-    flex-direction: column;
-    gap: 12px;
-    align-items: flex-end;
-    pointer-events: none;
-}
-[data-ui="guided"] .guided-actions > * { pointer-events: auto; }
-
-[data-ui="guided"] .action-row {
-    display: flex; align-items: center; gap: 10px;
-}
-
-[data-ui="guided"] .action-label {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    letter-spacing: .03em;
-    padding: 8px 14px;
-    border-radius: 24px;
-    background: var(--bg2);
-    border: 1px solid var(--border2);
-    color: var(--accent);
-    white-space: nowrap;
-    box-shadow: 0 4px 12px rgba(0,0,0,.08);
-    max-width: 260px;
-    overflow: hidden; text-overflow: ellipsis;
-    font-weight: 600;
-}
-
-[data-ui="guided"] .circle-btn {
-    width: 52px; height: 52px;
-    border-radius: 50%;
-    border: none;
-    cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    font-family: 'JetBrains Mono', monospace;
-    font-weight: 700; font-size: 20px;
-    line-height: 1;
-    flex-shrink: 0;
-    transition: transform .18s ease, box-shadow .18s ease,
-                background .18s ease, border-color .18s ease, color .18s ease;
-}
-[data-ui="guided"] .circle-btn:hover {
-    transform: translateY(-2px) scale(1.05);
-}
-[data-ui="guided"] .circle-btn:active {
-    transform: translateY(0) scale(1);
-}
-[data-ui="guided"] .circle-btn:disabled {
-    opacity: .35; cursor: not-allowed;
-    transform: none !important;
-    filter: grayscale(.4);
-}
-
-[data-ui="guided"] .circle-back {
-    width: 44px; height: 44px;
-    background: var(--bg2);
-    border: 1px solid var(--border2);
-    color: var(--text2);
-    font-size: 16px;
-    box-shadow: 0 1px 3px rgba(0,0,0,.05);
-}
-[data-ui="guided"] .circle-back:hover {
-    border-color: var(--accent);
-    color: var(--accent);
-    background: var(--accent-dim);
-}
-
-[data-ui="guided"] .circle-next {
-    width: 56px; height: 56px;
-    background: var(--accent);
-    color: var(--bg2);
-    box-shadow: 0 6px 20px rgba(161, 61, 44, .3);
-    font-size: 22px;
-}
-[data-ui="guided"] .circle-next:hover {
-    background: var(--accent2);
-    box-shadow: 0 10px 28px rgba(161, 61, 44, .4);
-}
-[data-ui="guided"] .circle-next.complete {
-    background: var(--ok, #2F5233);
-    color: #ffffff;
-    box-shadow: 0 6px 20px rgba(47, 82, 51, .35);
-}
-
-[data-ui="guided"] .circle-docx {
-    width: 58px; height: 58px;
-    background: var(--bg2);
-    border: 2px solid var(--accent);
-    color: var(--accent);
-    font-size: 10px;
-    box-shadow: 0 6px 20px rgba(0,0,0,.08),
-                0 0 0 4px var(--accent-dim);
-}
-[data-ui="guided"] .circle-docx:hover {
-    background: var(--accent-dim);
-    border-color: var(--accent2);
-    box-shadow: 0 10px 26px rgba(0,0,0,.12),
-                0 0 0 4px rgba(161, 61, 44, .18);
-}
-[data-ui="guided"] .circle-docx .docx-text {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px; font-weight: 700; letter-spacing: .08em;
-}
-
-/* ─── TOAST REPOSITION ─── */
-[data-ui="guided"] .toast { bottom: 180px; }
-
-/* ─── MOBILE MENU BUTTON ─── */
-[data-ui="guided"] .mobile-menu-btn {
-    display: none;
-    position: fixed;
-    top: 14px; left: 14px;
-    width: 42px; height: 42px;
-    border-radius: 10px;
-    background: var(--bg2);
-    border: 1px solid var(--border2);
-    color: var(--accent);
-    font-size: 18px;
-    align-items: center; justify-content: center;
-    cursor: pointer;
-    z-index: 1000;
-    box-shadow: 0 4px 12px rgba(0,0,0,.08);
-}
-
-/* ─── MOBILE BACKDROP ─── */
-[data-ui="guided"] .nav-backdrop {
-    display: block;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,.35);
-    z-index: 880;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity .28s ease;
-}
-[data-ui="guided"].nav-mobile-open .nav-backdrop {
-    opacity: 1;
-    pointer-events: all;
-}
-
-/* ─── HIDE SCROLL TOP IN GUIDED (floating actions take over) ─── */
-[data-ui="guided"] .scroll-top { display: none; }
-
-/* ─── RESPONSIVE ─── */
-@media (max-width: 900px) {
-    [data-ui="guided"] .section-nav {
-        transform: translateX(-100%);
-        width: 240px !important;
-        transition: transform .28s cubic-bezier(.4,0,.2,1);
-        box-shadow: 8px 0 32px rgba(0,0,0,.15);
-    }
-    [data-ui="guided"].nav-mobile-open .section-nav {
-        transform: translateX(0);
-    }
-    /* Force expanded state in drawer */
-    [data-ui="guided"].guided-sb-collapsed .nav-brand,
-    [data-ui="guided"].guided-sb-collapsed .nav-progress-label,
-    [data-ui="guided"].guided-sb-collapsed .nav-label { opacity: 1; width: auto; height: auto; }
-    [data-ui="guided"].guided-sb-collapsed .nav-num { display: flex; }
-    [data-ui="guided"].guided-sb-collapsed .nav-icon { display: none; }
-    [data-ui="guided"].guided-sb-collapsed .nav-item { justify-content: flex-start; padding: 9px 10px; }
-
-    [data-ui="guided"] .app-shell { padding-left: 0 !important; }
-    [data-ui="guided"] .app-main { padding: 0 16px 160px; }
-    [data-ui="guided"] .mobile-menu-btn { display: flex; }
-    [data-ui="guided"] .site-header { padding-top: 60px; }
-    [data-ui="guided"] .form-section { padding: 18px 16px 20px; }
-
-    [data-ui="guided"] .guided-actions { bottom: 16px; right: 16px; gap: 10px; }
-    [data-ui="guided"] .circle-btn { width: 46px; height: 46px; font-size: 18px; }
-    [data-ui="guided"] .circle-back { width: 40px; height: 40px; font-size: 15px; }
-    [data-ui="guided"] .circle-next { width: 50px; height: 50px; font-size: 19px; }
-    [data-ui="guided"] .circle-docx { width: 52px; height: 52px; }
-    [data-ui="guided"] .circle-docx .docx-text { font-size: 10px; }
-    [data-ui="guided"] .action-label {
-        font-size: 9px;
-        padding: 6px 10px;
-        max-width: 150px;
-    }
-}
-
-/* ─── PRINT OVERRIDE (always expand full doc) ─── */
-@media print {
+    .section-notes { page-break-inside: avoid; }
     [data-ui="guided"] .section-nav,
     [data-ui="guided"] .guided-actions,
     [data-ui="guided"] .mobile-menu-btn,
@@ -908,7 +448,269 @@ textarea { resize: vertical; min-height: 44px; font-size: 13px; line-height: 1.5
     [data-ui="guided"] .app-shell { padding-left: 0 !important; }
     [data-ui="guided"] .form-section { display: block !important; }
     [data-ui="guided"] .form-section-title .step-counter { display: none; }
-}</style>
+}
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 700px) {
+    .form-group.half, .form-group.third { flex: 1 0 100%; }
+    .form-row { gap: 8px; }
+    .form-section { padding: 14px 14px 18px; }
+}
+
+/* ─── Classic = full-width stacked sections ─── */
+[data-ui="classic"] .section-nav,
+[data-ui="classic"] .guided-actions,
+[data-ui="classic"] .mobile-menu-btn,
+[data-ui="classic"] .nav-backdrop { display: none !important; }
+[data-ui="classic"] .app-shell { display: block; }
+[data-ui="classic"] .form-section { display: block; }
+[data-ui="classic"] .guided-step-meta { display: none; }
+
+/* ═══════════════════════════════════════════════════════════════
+   GUIDED UI — OB-GYN style stepper
+   ═══════════════════════════════════════════════════════════════ */
+.section-nav, .guided-actions, .mobile-menu-btn, .nav-backdrop { display: none; }
+
+[data-ui="guided"] { --sb-width: 240px; --sb-width-collapsed: 64px; --sb-current: var(--sb-width); }
+[data-ui="guided"].guided-sb-collapsed { --sb-current: var(--sb-width-collapsed); }
+
+[data-ui="guided"] .section-nav {
+    display: flex; position: fixed; top: 0; left: 0; height: 100vh;
+    width: var(--sb-current); background: var(--bg2);
+    border-right: 1px solid var(--border2); z-index: 900;
+    flex-direction: column; overflow: hidden;
+    transition: width .28s cubic-bezier(.4,0,.2,1);
+    box-shadow: 1px 0 3px rgba(0,0,0,.04);
+}
+[data-ui="guided"] .nav-header {
+    display: flex; align-items: center; gap: 10px; padding: 16px 14px;
+    border-bottom: 1px solid var(--border); flex-shrink: 0;
+}
+[data-ui="guided"] .nav-collapse {
+    width: 36px; height: 36px; border-radius: 8px;
+    background: transparent; border: 1px solid var(--border2);
+    color: var(--accent); font-size: 16px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all .18s ease; flex-shrink: 0;
+}
+[data-ui="guided"] .nav-collapse:hover { background: var(--accent-dim); border-color: var(--accent); }
+[data-ui="guided"] .nav-brand {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    letter-spacing: .16em; text-transform: uppercase; color: var(--accent);
+    white-space: nowrap; font-weight: 600; transition: opacity .15s;
+}
+[data-ui="guided"].guided-sb-collapsed .nav-brand { opacity: 0; }
+
+[data-ui="guided"] .nav-progress {
+    padding: 14px 18px 10px; flex-shrink: 0; border-bottom: 1px solid var(--border);
+}
+[data-ui="guided"].guided-sb-collapsed .nav-progress { padding: 14px 12px 10px; }
+[data-ui="guided"] .nav-progress-label {
+    font-family: 'JetBrains Mono', monospace; font-size: 9.5px;
+    letter-spacing: .14em; text-transform: uppercase; color: var(--text3);
+    margin-bottom: 6px; display: flex; justify-content: space-between;
+    white-space: nowrap; overflow: hidden;
+}
+[data-ui="guided"].guided-sb-collapsed .nav-progress-label { opacity: 0; height: 0; margin: 0; }
+[data-ui="guided"] .nav-progress-track { height: 3px; background: var(--bg4); border-radius: 2px; overflow: hidden; }
+[data-ui="guided"] .nav-progress-fill {
+    display: block; height: 100%; width: 0%;
+    background: linear-gradient(90deg, var(--banner), var(--accent));
+    border-radius: 2px; transition: width .35s ease;
+}
+
+[data-ui="guided"] .nav-list {
+    list-style: none; padding: 8px 8px 16px; margin: 0;
+    flex: 1; overflow-y: auto; overflow-x: hidden;
+    display: flex; flex-direction: column; gap: 2px;
+    scrollbar-width: thin; scrollbar-color: var(--border2) transparent;
+}
+[data-ui="guided"] .nav-list::-webkit-scrollbar { width: 4px; }
+[data-ui="guided"] .nav-list::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+[data-ui="guided"] .nav-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 9px 10px; border-radius: 8px; color: var(--text2);
+    font-size: 12px; cursor: pointer; transition: all .18s ease;
+    white-space: nowrap; overflow: hidden; border: 1px solid transparent;
+    background: transparent; width: 100%; text-align: left; font-family: inherit;
+}
+[data-ui="guided"] .nav-item:hover { background: var(--accent-dim); color: var(--accent); }
+[data-ui="guided"] .nav-item.active {
+    background: var(--accent-dim); color: var(--accent);
+    border-color: var(--border2); font-weight: 600;
+}
+[data-ui="guided"] .nav-item.filled .nav-num { background: var(--ok); color: #ffffff; border-color: var(--ok); }
+[data-ui="guided"] .nav-item.active .nav-num {
+    background: var(--accent); color: var(--bg2);
+    border-color: var(--accent); transform: scale(1.08);
+}
+[data-ui="guided"] .nav-num {
+    width: 24px; height: 24px; border-radius: 50%;
+    border: 1px solid var(--border2); display: flex;
+    align-items: center; justify-content: center;
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    font-weight: 600; flex-shrink: 0; color: var(--text2);
+    background: var(--bg3); transition: all .18s;
+}
+[data-ui="guided"] .nav-icon { font-size: 15px; line-height: 1; flex-shrink: 0; display: none; }
+[data-ui="guided"].guided-sb-collapsed .nav-num { display: none; }
+[data-ui="guided"].guided-sb-collapsed .nav-icon { display: block; }
+[data-ui="guided"] .nav-label { font-size: 12px; letter-spacing: .02em; opacity: 1; transition: opacity .15s; overflow: hidden; text-overflow: ellipsis; }
+[data-ui="guided"].guided-sb-collapsed .nav-label { opacity: 0; width: 0; }
+[data-ui="guided"].guided-sb-collapsed .nav-item { justify-content: center; padding: 10px 8px; }
+
+[data-ui="guided"] .nav-footer {
+    padding: 10px 8px 14px; border-top: 1px solid var(--border);
+    flex-shrink: 0; display: flex; flex-direction: column; gap: 4px;
+}
+[data-ui="guided"] .nav-action {
+    display: flex; align-items: center; gap: 12px; padding: 9px 10px;
+    border-radius: 8px; color: var(--text2); font-size: 12px; cursor: pointer;
+    transition: all .18s; background: transparent; border: 1px solid transparent;
+    font-family: inherit; width: 100%; text-align: left; white-space: nowrap; overflow: hidden;
+}
+[data-ui="guided"] .nav-action:hover { background: var(--accent-dim); color: var(--accent); border-color: var(--border2); }
+[data-ui="guided"] .nav-action .nav-icon { display: block; font-size: 15px; flex-shrink: 0; }
+[data-ui="guided"] .nav-action .nav-label { opacity: 1; }
+[data-ui="guided"].guided-sb-collapsed .nav-action { justify-content: center; padding: 10px 8px; }
+[data-ui="guided"].guided-sb-collapsed .nav-action .nav-label { opacity: 0; width: 0; }
+[data-ui="guided"] .reset-action { color: var(--danger); }
+[data-ui="guided"] .reset-action:hover { background: rgba(227,91,91,0.08); border-color: rgba(227,91,91,0.25); color: var(--danger); }
+
+[data-ui="guided"] .app-shell { display: block; padding-left: var(--sb-current); transition: padding-left .28s cubic-bezier(.4,0,.2,1); }
+[data-ui="guided"] .app-main { min-width: 0; padding: 0 24px 140px; }
+[data-ui="guided"] .wrapper { max-width: 1040px; margin: 0 auto; }
+[data-ui="guided"] .site-header { padding: 24px 0 16px; margin-bottom: 22px; }
+[data-ui="guided"] .header-title { font-size: clamp(20px, 2.4vw, 28px); }
+[data-ui="guided"] .header-actions > .btn { display: none; }
+[data-ui="guided"] .header-actions > .btn.ui-toggle { display: inline-flex; }
+[data-ui="guided"] .header-actions > .save-pill { display: inline-flex; }
+
+[data-ui="guided"] .form-section { display: none; }
+[data-ui="guided"] .form-section.active { display: block; animation: guidedFadeIn .35s ease-out; }
+@keyframes guidedFadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+[data-ui="guided"] .form-section {
+    background: var(--bg2); border: 1px solid var(--border); border-radius: 10px;
+    padding: 24px 28px 26px; box-shadow: 0 1px 2px rgba(0,0,0,.04), 0 1px 3px rgba(0,0,0,.05);
+    border-top: none; margin-bottom: 24px; position: relative; scroll-margin-top: 20px;
+}
+[data-ui="guided"] .form-section::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--banner), var(--accent)); border-radius: 10px 10px 0 0;
+}
+[data-ui="guided"] .form-section-title {
+    display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+    margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid var(--border);
+    font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 600; color: var(--text);
+}
+[data-ui="guided"] .form-section-title .num {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: .14em;
+    text-transform: uppercase; background: var(--accent-dim); color: var(--accent);
+    padding: 4px 12px; border-radius: 20px; border: 1px solid var(--border2); font-weight: 600; flex-shrink: 0;
+}
+[data-ui="guided"] .form-section-title .num::before { content: 'STEP '; opacity: .75; margin-right: 2px; }
+[data-ui="guided"] .form-section-title .badge {
+    font-size: 9px; letter-spacing: .14em; background: var(--bg3);
+    color: var(--text3); border: 1px solid var(--border); padding: 2px 10px;
+    border-radius: 3px; font-weight: 500; margin-left: auto;
+}
+[data-ui="guided"] .form-section-title .step-counter {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: var(--text3); letter-spacing: .1em; margin-left: 8px; flex-shrink: 0;
+}
+
+[data-ui="guided"] .guided-actions {
+    display: flex; position: fixed; bottom: 24px; right: 24px;
+    z-index: 1000; flex-direction: column; gap: 12px;
+    align-items: flex-end; pointer-events: none;
+}
+[data-ui="guided"] .guided-actions > * { pointer-events: auto; }
+[data-ui="guided"] .action-row { display: flex; align-items: center; gap: 10px; }
+[data-ui="guided"] .action-label {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: .03em;
+    padding: 8px 14px; border-radius: 24px; background: var(--bg2);
+    border: 1px solid var(--border2); color: var(--accent); white-space: nowrap;
+    box-shadow: 0 4px 12px rgba(0,0,0,.08); max-width: 260px;
+    overflow: hidden; text-overflow: ellipsis; font-weight: 600;
+}
+[data-ui="guided"] .circle-btn {
+    width: 52px; height: 52px; border-radius: 50%; border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'JetBrains Mono', monospace; font-weight: 700;
+    font-size: 20px; line-height: 1; flex-shrink: 0;
+    transition: transform .18s ease, box-shadow .18s ease, background .18s ease, border-color .18s ease, color .18s ease;
+}
+[data-ui="guided"] .circle-btn:hover { transform: translateY(-2px) scale(1.05); }
+[data-ui="guided"] .circle-btn:active { transform: translateY(0) scale(1); }
+[data-ui="guided"] .circle-btn:disabled { opacity: .35; cursor: not-allowed; transform: none !important; filter: grayscale(.4); }
+[data-ui="guided"] .circle-back {
+    width: 44px; height: 44px; background: var(--bg2);
+    border: 1px solid var(--border2); color: var(--text2); font-size: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.05);
+}
+[data-ui="guided"] .circle-back:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
+[data-ui="guided"] .circle-next {
+    width: 56px; height: 56px; background: var(--accent); color: var(--bg2);
+    box-shadow: 0 6px 20px rgba(161,61,44,.3); font-size: 22px;
+}
+[data-ui="guided"] .circle-next:hover { background: var(--accent2); box-shadow: 0 10px 28px rgba(161,61,44,.4); }
+[data-ui="guided"] .circle-next.complete { background: var(--ok); color: #ffffff; box-shadow: 0 6px 20px rgba(47,82,51,.35); }
+[data-ui="guided"] .circle-docx {
+    width: 58px; height: 58px; background: var(--bg2);
+    border: 2px solid var(--accent); color: var(--accent); font-size: 10px;
+    box-shadow: 0 6px 20px rgba(0,0,0,.08), 0 0 0 4px var(--accent-dim);
+}
+[data-ui="guided"] .circle-docx:hover {
+    background: var(--accent-dim); border-color: var(--accent2);
+    box-shadow: 0 10px 26px rgba(0,0,0,.12), 0 0 0 4px rgba(161,61,44,.18);
+}
+[data-ui="guided"] .circle-docx .docx-text { font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700; letter-spacing: .08em; }
+[data-ui="guided"] .toast { bottom: 180px; }
+[data-ui="guided"] .mobile-menu-btn {
+    display: none; position: fixed; top: 14px; left: 14px;
+    width: 42px; height: 42px; border-radius: 10px; background: var(--bg2);
+    border: 1px solid var(--border2); color: var(--accent); font-size: 18px;
+    align-items: center; justify-content: center; cursor: pointer;
+    z-index: 1000; box-shadow: 0 4px 12px rgba(0,0,0,.08);
+}
+[data-ui="guided"] .nav-backdrop {
+    display: block; position: fixed; inset: 0;
+    background: rgba(0,0,0,.35); z-index: 880;
+    opacity: 0; pointer-events: none; transition: opacity .28s ease;
+}
+[data-ui="guided"].nav-mobile-open .nav-backdrop { opacity: 1; pointer-events: all; }
+[data-ui="guided"] .scroll-top { display: none; }
+
+@media (max-width: 900px) {
+    [data-ui="guided"] .section-nav {
+        transform: translateX(-100%); width: 240px !important;
+        transition: transform .28s cubic-bezier(.4,0,.2,1);
+        box-shadow: 8px 0 32px rgba(0,0,0,.15);
+    }
+    [data-ui="guided"].nav-mobile-open .section-nav { transform: translateX(0); }
+    [data-ui="guided"].guided-sb-collapsed .nav-brand,
+    [data-ui="guided"].guided-sb-collapsed .nav-progress-label,
+    [data-ui="guided"].guided-sb-collapsed .nav-label { opacity: 1; width: auto; height: auto; }
+    [data-ui="guided"].guided-sb-collapsed .nav-num { display: flex; }
+    [data-ui="guided"].guided-sb-collapsed .nav-icon { display: none; }
+    [data-ui="guided"].guided-sb-collapsed .nav-item { justify-content: flex-start; padding: 9px 10px; }
+    [data-ui="guided"] .app-shell { padding-left: 0 !important; }
+    [data-ui="guided"] .app-main { padding: 0 16px 160px; }
+    [data-ui="guided"] .mobile-menu-btn { display: flex; }
+    [data-ui="guided"] .site-header { padding-top: 60px; }
+    [data-ui="guided"] .form-section { padding: 18px 16px 20px; }
+    [data-ui="guided"] .guided-actions { bottom: 16px; right: 16px; gap: 10px; }
+    [data-ui="guided"] .circle-btn { width: 46px; height: 46px; font-size: 18px; }
+    [data-ui="guided"] .circle-back { width: 40px; height: 40px; font-size: 15px; }
+    [data-ui="guided"] .circle-next { width: 50px; height: 50px; font-size: 19px; }
+    [data-ui="guided"] .circle-docx { width: 52px; height: 52px; }
+    [data-ui="guided"] .circle-docx .docx-text { font-size: 10px; }
+    [data-ui="guided"] .action-label { font-size: 9px; padding: 6px 10px; max-width: 150px; }
+    .voice-panel { width: 280px; }
+}
+</style>
 </head>
 <body>
 
@@ -920,27 +722,23 @@ textarea { resize: vertical; min-height: 44px; font-size: 13px; line-height: 1.5
         <span class="nav-brand">AbHC CHQ</span>
     </div>
     <div class="nav-progress">
-        <div class="nav-progress-label">
-            <span>Progress</span>
-            <span id="navProgressText">0 / 13</span>
-        </div>
-        <div class="nav-progress-track">
-            <div class="nav-progress-fill" id="navProgressFill"></div>
-        </div>
+        <div class="nav-progress-label"><span>Progress</span><span id="navProgressText">0 / 13</span></div>
+        <div class="nav-progress-track"><div class="nav-progress-fill" id="navProgressFill"></div></div>
     </div>
     <nav class="nav-list" id="navList"></nav>
     <div class="nav-footer">
-        <button type="button" class="nav-action theme-toggle" id="sidebarThemeBtn" title="Toggle light / dark mode">
+        <button type="button" class="nav-action theme-toggle" id="sidebarThemeBtn">
             <span class="nav-icon" id="sidebarThemeIcon">🌙</span>
             <span class="nav-label" id="sidebarThemeLabel">Dark Mode</span>
         </button>
-        <button type="button" class="nav-action" id="sidebarPrintBtn" title="Print / Save as PDF">
-            <span class="nav-icon">🖨</span>
-            <span class="nav-label">Print / PDF</span>
+        <button type="button" class="nav-action" id="sidebarCsvBtn">
+            <span class="nav-icon">📊</span><span class="nav-label">Export CSV</span>
         </button>
-        <button type="button" class="nav-action reset-action" id="sidebarResetBtn" title="Reset all fields">
-            <span class="nav-icon">🔄</span>
-            <span class="nav-label">Reset Form</span>
+        <button type="button" class="nav-action" id="sidebarPrintBtn">
+            <span class="nav-icon">🖨</span><span class="nav-label">Print / PDF</span>
+        </button>
+        <button type="button" class="nav-action reset-action" id="sidebarResetBtn">
+            <span class="nav-icon">🔄</span><span class="nav-label">Reset Form</span>
         </button>
     </div>
 </aside>
@@ -949,7 +747,6 @@ textarea { resize: vertical; min-height: 44px; font-size: 13px; line-height: 1.5
 <div class="app-shell">
     <main class="app-main">
         <div class="wrapper">
-
             <header class="site-header">
                 <div>
                     <div class="header-eyebrow">CSU SOM · Batch Atlas · Year Level 2 · MD202</div>
@@ -957,12 +754,11 @@ textarea { resize: vertical; min-height: 44px; font-size: 13px; line-height: 1.5
                     <p class="header-sub">Community Health Nursing Assessment · Data-Gathering Instrument</p>
                 </div>
                 <div class="header-actions">
-                    <span class="save-pill" id="savePill" title="Progress is saved on this device">
-                        <span class="save-dot"></span><span id="saveText">Saved</span>
-                    </span>
+                    <span class="save-pill" id="savePill"><span class="save-dot"></span><span id="saveText">Saved</span></span>
                     <button class="btn theme-toggle" id="themeToggleBtn" type="button">🌙 Night</button>
                     <button class="btn ui-toggle" id="uiToggleBtn" type="button">▦ Guided UI</button>
                     <button class="btn" type="button" onclick="window.print()">🖨 Print / PDF</button>
+                    <button class="btn green" type="button" onclick="CHQ.csv.generate()">📊 Export CSV</button>
                     <button class="btn blue" type="button" onclick="CHQ.docx.generate(event)">⬇ Generate DOCX</button>
                     <button class="btn danger" type="button" onclick="CHQ.reset()">Reset</button>
                 </div>
@@ -975,7 +771,6 @@ textarea { resize: vertical; min-height: 44px; font-size: 13px; line-height: 1.5
 
             <form id="chForm" autocomplete="off">
 
-                <!-- ─── § RESPONDENT ─── -->
                 <section class="form-section" data-section-id="s0" data-section-num="§" data-section-title="Respondent / Key Informant">
                     <div class="form-section-title"><span class="num">§</span>Respondent / Key Informant <span class="badge">Identifier</span></div>
                     <div class="form-row">
@@ -999,14 +794,10 @@ textarea { resize: vertical; min-height: 44px; font-size: 13px; line-height: 1.5
                     </div>
                 </section>
 
-                <!-- ─── I. COMMUNITY PROFILE ─── -->
                 <section class="form-section" data-section-id="s1" data-section-num="I." data-section-title="Community Profile">
                     <div class="form-section-title"><span class="num">I.</span>Community Profile <span class="badge">Demographics</span></div>
                     <div class="data-table-wrap">
-                        <table class="data-table">
-                            <thead><tr><th style="width:65%;">Indicator</th><th>Data</th></tr></thead>
-                            <tbody id="profileTableBody"></tbody>
-                        </table>
+                        <table class="data-table"><thead><tr><th style="width:65%;">Indicator</th><th>Data</th></tr></thead><tbody id="profileTableBody"></tbody></table>
                     </div>
                     <div class="q"><span class="qn">1.</span> Are there particularly vulnerable groups in the community?</div>
                     <div class="chip-group" data-field="vulnerableGroups">
@@ -1019,7 +810,6 @@ textarea { resize: vertical; min-height: 44px; font-size: 13px; line-height: 1.5
                     </div>
                 </section>
 
-                <!-- ─── II. GENERAL HEALTH STATUS ─── -->
                 <section class="form-section" data-section-id="s2" data-section-num="II." data-section-title="General Health Status">
                     <div class="form-section-title"><span class="num">II.</span>General Health Status <span class="badge">Morbidity</span></div>
                     <div class="q"><span class="qn">1.</span> Five most common reasons for consultation at the health center</div>
@@ -1048,14 +838,10 @@ textarea { resize: vertical; min-height: 44px; font-size: 13px; line-height: 1.5
                     <textarea id="ghSerious" rows="2" placeholder="Condition / rationale"></textarea>
                 </section>
 
-                <!-- ─── III. COMMUNICABLE DISEASES ─── -->
                 <section class="form-section" data-section-id="s3" data-section-num="III." data-section-title="Communicable Diseases">
                     <div class="form-section-title"><span class="num">III.</span>Communicable Diseases <span class="badge">Surveillance</span></div>
                     <div class="data-table-wrap">
-                        <table class="data-table">
-                            <thead><tr><th style="width:55%;">Disease / Condition</th><th style="width:15%;">Cases</th><th style="width:15%;">Increasing?</th><th style="width:15%;">Decreasing?</th></tr></thead>
-                            <tbody id="commTableBody"></tbody>
-                        </table>
+                        <table class="data-table"><thead><tr><th style="width:55%;">Disease / Condition</th><th style="width:15%;">Cases</th><th style="width:15%;">Increasing?</th><th style="width:15%;">Decreasing?</th></tr></thead><tbody id="commTableBody"></tbody></table>
                     </div>
                     <div class="q"><span class="qn">1.</span> Is there currently an outbreak or unusual increase in any communicable disease?</div>
                     <div class="chip-group" data-field="outbreak">
@@ -1065,14 +851,10 @@ textarea { resize: vertical; min-height: 44px; font-size: 13px; line-height: 1.5
                     <div class="form-row mt-8"><div class="form-group full"><label>If yes, specify</label><input id="outbreakDetail" placeholder="Disease / area / magnitude" /></div></div>
                 </section>
 
-                <!-- ─── IV. NCD ─── -->
                 <section class="form-section" data-section-id="s4" data-section-num="IV." data-section-title="Noncommunicable Diseases">
                     <div class="form-section-title"><span class="num">IV.</span>Noncommunicable Diseases <span class="badge">NCD</span></div>
                     <div class="data-table-wrap">
-                        <table class="data-table">
-                            <thead><tr><th style="width:60%;">Condition</th><th>Estimated / recorded cases</th></tr></thead>
-                            <tbody id="ncdTableBody"></tbody>
-                        </table>
+                        <table class="data-table"><thead><tr><th style="width:60%;">Condition</th><th>Estimated / recorded cases</th></tr></thead><tbody id="ncdTableBody"></tbody></table>
                     </div>
                     <div class="q"><span class="qn">1.</span> Which NCD is the biggest concern in the community?</div>
                     <textarea id="ncdConcern" rows="2" placeholder="Condition / rationale"></textarea>
@@ -1094,14 +876,10 @@ textarea { resize: vertical; min-height: 44px; font-size: 13px; line-height: 1.5
                     </div>
                 </section>
 
-                <!-- ─── V. MCH ─── -->
                 <section class="form-section" data-section-id="s5" data-section-num="V." data-section-title="Maternal & Child Health">
                     <div class="form-section-title"><span class="num">V.</span>Maternal &amp; Child Health <span class="badge">MCH</span></div>
                     <div class="data-table-wrap">
-                        <table class="data-table">
-                            <thead><tr><th style="width:70%;">Indicator</th><th>Number / Percentage</th></tr></thead>
-                            <tbody id="mchTableBody"></tbody>
-                        </table>
+                        <table class="data-table"><thead><tr><th style="width:70%;">Indicator</th><th>Number / Percentage</th></tr></thead><tbody id="mchTableBody"></tbody></table>
                     </div>
                     <div class="q"><span class="qn">1.</span> Common maternal / child health concerns</div>
                     <div class="chip-group" data-field="mchConcerns">
@@ -1115,7 +893,6 @@ textarea { resize: vertical; min-height: 44px; font-size: 13px; line-height: 1.5
                     </div>
                 </section>
 
-                <!-- ─── VI. IMMUNIZATION ─── -->
                 <section class="form-section" data-section-id="s6" data-section-num="VI." data-section-title="Immunization">
                     <div class="form-section-title"><span class="num">VI.</span>Immunization <span class="badge">EPI</span></div>
                     <div class="q"><span class="qn">1.</span> Current immunization status of children</div>
@@ -1137,7 +914,6 @@ textarea { resize: vertical; min-height: 44px; font-size: 13px; line-height: 1.5
                     </div>
                 </section>
 
-                <!-- ─── VII. NUTRITION ─── -->
                 <section class="form-section" data-section-id="s7" data-section-num="VII." data-section-title="Nutrition">
                     <div class="form-section-title"><span class="num">VII.</span>Nutrition <span class="badge">Nutrition</span></div>
                     <div class="q"><span class="qn">1.</span> Nutrition problems present</div>
@@ -1151,15 +927,13 @@ textarea { resize: vertical; min-height: 44px; font-size: 13px; line-height: 1.5
                         <label class="chip"><input type="checkbox" value="Other" />Other:&nbsp;<input class="chip-other-input" data-other-for="nutProblems" placeholder="specify" /></label>
                     </div>
                     <div class="data-table-wrap mt-8">
-                        <table class="data-table">
-                            <thead><tr><th style="width:60%;">Condition</th><th>Number</th></tr></thead>
-                            <tbody>
-                                <tr><td class="row-label">Underweight</td><td><input id="nutUnder" type="number" placeholder="n" /></td></tr>
-                                <tr><td class="row-label">Wasted</td><td><input id="nutWasted" type="number" placeholder="n" /></td></tr>
-                                <tr><td class="row-label">Stunted</td><td><input id="nutStunted" type="number" placeholder="n" /></td></tr>
-                                <tr><td class="row-label">Overweight / obese</td><td><input id="nutOver" type="number" placeholder="n" /></td></tr>
-                            </tbody>
-                        </table>
+                        <table class="data-table"><thead><tr><th style="width:60%;">Condition</th><th>Number</th></tr></thead>
+                        <tbody>
+                            <tr><td class="row-label">Underweight</td><td><input id="nutUnder" type="number" placeholder="n" /></td></tr>
+                            <tr><td class="row-label">Wasted</td><td><input id="nutWasted" type="number" placeholder="n" /></td></tr>
+                            <tr><td class="row-label">Stunted</td><td><input id="nutStunted" type="number" placeholder="n" /></td></tr>
+                            <tr><td class="row-label">Overweight / obese</td><td><input id="nutOver" type="number" placeholder="n" /></td></tr>
+                        </tbody></table>
                     </div>
                     <div class="q"><span class="qn">2.</span> Nutrition programs currently available</div>
                     <div class="chip-group" data-field="nutPrograms">
@@ -1174,7 +948,6 @@ textarea { resize: vertical; min-height: 44px; font-size: 13px; line-height: 1.5
                     <textarea id="nutConcern" rows="2" placeholder="Description"></textarea>
                 </section>
 
-                <!-- ─── VIII. WASH ─── -->
                 <section class="form-section" data-section-id="s8" data-section-num="VIII." data-section-title="Water, Sanitation & Environment">
                     <div class="form-section-title"><span class="num">VIII.</span>Water, Sanitation &amp; Environment <span class="badge">WASH</span></div>
                     <div class="q"><span class="qn">1.</span> Main water sources</div>
@@ -1209,7 +982,6 @@ textarea { resize: vertical; min-height: 44px; font-size: 13px; line-height: 1.5
                     </div>
                 </section>
 
-                <!-- ─── IX. MENTAL & SOCIAL ─── -->
                 <section class="form-section" data-section-id="s9" data-section-num="IX." data-section-title="Mental & Social Health">
                     <div class="form-section-title"><span class="num">IX.</span>Mental &amp; Social Health <span class="badge">Psychosocial</span></div>
                     <div class="q"><span class="qn">1.</span> Mental / social concerns observed or reported</div>
@@ -1233,7 +1005,6 @@ textarea { resize: vertical; min-height: 44px; font-size: 13px; line-height: 1.5
                     <textarea id="mentalMajor" rows="2" placeholder="Description"></textarea>
                 </section>
 
-                <!-- ─── X. SERVICES & RESOURCES ─── -->
                 <section class="form-section" data-section-id="s10" data-section-num="X." data-section-title="Health Services & Resources">
                     <div class="form-section-title"><span class="num">X.</span>Health Services &amp; Resources <span class="badge">Capacity</span></div>
                     <div class="q"><span class="qn">1.</span> Services available at the health center</div>
@@ -1266,7 +1037,6 @@ textarea { resize: vertical; min-height: 44px; font-size: 13px; line-height: 1.5
                     </div>
                 </section>
 
-                <!-- ─── XI. ACCESS ─── -->
                 <section class="form-section" data-section-id="s11" data-section-num="XI." data-section-title="Access to Healthcare">
                     <div class="form-section-title"><span class="num">XI.</span>Access to Healthcare <span class="badge">Barriers</span></div>
                     <div class="q"><span class="qn">1.</span> Major barriers to healthcare in this community</div>
@@ -1292,7 +1062,6 @@ textarea { resize: vertical; min-height: 44px; font-size: 13px; line-height: 1.5
                     <textarea id="neededServices" rows="3" placeholder="List priority gaps / requests"></textarea>
                 </section>
 
-                <!-- ─── XII. PRIORITIES ─── -->
                 <section class="form-section" data-section-id="s12" data-section-num="XII." data-section-title="Community Health Priorities">
                     <div class="form-section-title"><span class="num">XII.</span>Community Health Priorities <span class="badge">Priorities</span></div>
                     <div class="q"><span class="qn">1.</span> Three most important health problems in the community</div>
@@ -1313,38 +1082,61 @@ textarea { resize: vertical; min-height: 44px; font-size: 13px; line-height: 1.5
 
             </form>
 
-            <div class="page-footer">
-                CSU SOM · Batch Atlas · Year Level 2 · MD202 · Brgy. Abilan Health Center
-            </div>
-
+            <div class="page-footer">CSU SOM · Batch Atlas · Year Level 2 · MD202 · Brgy. Abilan Health Center</div>
         </div>
     </main>
 </div>
 
 <button class="scroll-top" id="scrollTopBtn" type="button" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
 
-<!-- Guided-mode floating actions -->
 <div class="guided-actions" id="guidedActions">
     <div class="action-row">
-        <button type="button" class="circle-btn circle-back" id="guidedPrevBtn" title="Back" aria-label="Back">←</button>
+        <button type="button" class="circle-btn circle-back" id="guidedPrevBtn" title="Back">←</button>
         <span class="action-label" id="guidedNextLabel">Proceed</span>
-        <button type="button" class="circle-btn circle-next" id="guidedNextBtn" title="Proceed" aria-label="Proceed">→</button>
+        <button type="button" class="circle-btn circle-next" id="guidedNextBtn" title="Proceed">→</button>
     </div>
     <div class="action-row">
-        <button type="button" class="circle-btn circle-docx" onclick="CHQ.docx.generate(event)" title="Export DOCX" aria-label="Export DOCX">
+        <button type="button" class="circle-btn circle-docx" onclick="CHQ.docx.generate(event)" title="Export DOCX">
             <span class="docx-text">DOCX</span>
         </button>
     </div>
 </div>
 
+<!-- Voice FAB -->
+<div class="voice-fab" id="voiceFab">
+    <div class="voice-panel" id="voicePanel">
+        <div class="voice-panel-header">
+            <span class="voice-status-dot" id="voiceStatusDot"></span>
+            <span>Voice &amp; Notes</span>
+            <button class="close-panel" id="closePanelBtn" type="button">✕</button>
+        </div>
+        <div class="voice-transcript" id="voiceTranscript"><span style="color:var(--text3);font-style:italic;">Transcript will appear here…</span></div>
+        <div class="scratch-label">
+            <span>Quick Notes</span>
+            <span class="scratch-counter" id="scratchCounter">0</span>
+        </div>
+        <textarea id="voiceScratchpad" placeholder="Type or dictate notes here…" rows="4"></textarea>
+        <div class="voice-btns">
+            <button type="button" class="btn primary" id="voiceToggleBtn">🎙 Start</button>
+            <button type="button" class="btn" id="voiceToFieldBtn" title="Append scratchpad to focused field">↳ To field</button>
+            <button type="button" class="btn" id="voiceCopyBtn">📋 Copy</button>
+            <button type="button" class="btn danger" id="voiceClearBtn">🗑 Clear</button>
+        </div>
+        <div class="voice-hint">
+            Commands: <code>set [field] to [value]</code> · <code>[field] is [value]</code> · <code>note [text]</code> · <code>go to [section]</code>
+        </div>
+    </div>
+    <button class="voice-fab-btn" id="voiceFabBtn" type="button" title="Voice &amp; Notes (Ctrl+Shift+M)">🎙</button>
+</div>
+
 <script>
 window.CHQ = window.CHQ || {};
-
 (function () {
     const STATE_KEY = 'chq:state:v1';
     const META_KEY  = 'chq:meta:v1';
     const UI_KEY    = 'chq:ui:v1';
     const THEME_KEY = 'chq:theme:v1';
+    const SCRATCH_KEY = 'chq:scratch:v1';
 
     function serialize() {
         const data = {};
@@ -1354,11 +1146,15 @@ window.CHQ = window.CHQ || {};
         document.querySelectorAll('.chip-group[data-field]').forEach(wrap => {
             const field = wrap.dataset.field;
             const values = [];
-            wrap.querySelectorAll('input[type=checkbox]:checked, input[type=radio]:checked').forEach(inp => { values.push(inp.value); });
+            wrap.querySelectorAll('input[type=checkbox]:checked, input[type=radio]:checked').forEach(inp => values.push(inp.value));
             data[field] = values;
             const other = wrap.querySelector('.chip-other-input');
             if (other) data[field + '__other'] = other.value;
         });
+        for (let i = 0; i < 5; i++) {
+            const checked = document.querySelector(`input[name="comm${i}_trend"]:checked`);
+            data[`comm${i}_trend`] = checked ? checked.value : '';
+        }
         return data;
     }
 
@@ -1366,6 +1162,13 @@ window.CHQ = window.CHQ || {};
         if (!data || typeof data !== 'object') return;
         Object.entries(data).forEach(([key, value]) => {
             if (key.endsWith('__other')) return;
+            if (/^comm\d_trend$/.test(key)) {
+                if (value) {
+                    const el = document.querySelector(`input[name="${key}"][value="${value}"]`);
+                    if (el) el.checked = true;
+                }
+                return;
+            }
             const el = document.getElementById(key);
             if (!el) return;
             if (el.type === 'checkbox' || el.type === 'radio') return;
@@ -1389,18 +1192,18 @@ window.CHQ = window.CHQ || {};
     }
 
     function load() {
-        try { const raw = localStorage.getItem(STATE_KEY); return raw ? JSON.parse(raw) : null; }
-        catch (e) { return null; }
+        try { const raw = localStorage.getItem(STATE_KEY); return raw ? JSON.parse(raw) : null; } catch { return null; }
     }
 
     function clear() {
-        try { localStorage.removeItem(STATE_KEY); localStorage.removeItem(META_KEY); } catch (e) {}
+        try { localStorage.removeItem(STATE_KEY); localStorage.removeItem(META_KEY); } catch {}
     }
 
     function getPref(key, fallback) { try { return localStorage.getItem(key) || fallback; } catch { return fallback; } }
     function setPref(key, value) { try { localStorage.setItem(key, value); } catch {} }
 
-    window.CHQ.storage = { serialize, deserialize, saveNow, load, clear, getPref, setPref, STATE_KEY, META_KEY, UI_KEY, THEME_KEY };
+    window.CHQ.storage = { serialize, deserialize, saveNow, load, clear, getPref, setPref,
+        STATE_KEY, META_KEY, UI_KEY, THEME_KEY, SCRATCH_KEY };
 })();
 
 (function () {
@@ -1415,40 +1218,30 @@ window.CHQ = window.CHQ || {};
         if (sLabel) sLabel.textContent = theme === 'night' ? 'Light Mode' : 'Dark Mode';
     }
     function toggle() {
-        const current = document.documentElement.getAttribute('data-theme') || 'day';
-        const next = current === 'night' ? 'day' : 'night';
+        const next = document.documentElement.getAttribute('data-theme') === 'night' ? 'day' : 'night';
         apply(next); setPref(THEME_KEY, next);
     }
     function init() {
         apply(getPref(THEME_KEY, 'day'));
-        const btn = document.getElementById('themeToggleBtn');
-        if (btn) btn.addEventListener('click', toggle);
-        const sbBtn = document.getElementById('sidebarThemeBtn');
-        if (sbBtn) sbBtn.addEventListener('click', toggle);
+        document.getElementById('themeToggleBtn')?.addEventListener('click', toggle);
+        document.getElementById('sidebarThemeBtn')?.addEventListener('click', toggle);
     }
     window.CHQ.theme = { init, apply, toggle };
 })();
 
 (function () {
     const { getPref, setPref, UI_KEY } = window.CHQ.storage;
-    const STEP_ICONS = {
-        s0:'📋', s1:'👥', s2:'📊', s3:'🦠', s4:'💊',
-        s5:'🤱', s6:'💉', s7:'🍎', s8:'💧', s9:'🧠',
-        s10:'🏥', s11:'🚪', s12:'🎯'
-    };
+    const STEP_ICONS = { s0:'📋',s1:'👥',s2:'📊',s3:'🦠',s4:'💊',s5:'🤱',s6:'💉',s7:'🍎',s8:'💧',s9:'🧠',s10:'🏥',s11:'🚪',s12:'🎯' };
     let activeId = null;
     function getSections() { return Array.from(document.querySelectorAll('.form-section[data-section-id]')); }
-    function escapeHtml(s) { return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+    function esc(s) { return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
     function buildNav() {
         const navList = document.getElementById('navList');
         if (!navList) return;
         navList.innerHTML = getSections().map((s, i) => {
             const id = s.dataset.sectionId;
-            const num = s.dataset.sectionNum || (i+1);
-            const title = s.dataset.sectionTitle || '';
-            const icon = STEP_ICONS[id] || '•';
-            return `<button type="button" class="nav-item" data-target="${id}"><span class="nav-num">${escapeHtml(num)}</span><span class="nav-icon">${icon}</span><span class="nav-label">${escapeHtml(title)}</span></button>`;
+            return `<button type="button" class="nav-item" data-target="${id}"><span class="nav-num">${esc(s.dataset.sectionNum||(i+1))}</span><span class="nav-icon">${STEP_ICONS[id]||'•'}</span><span class="nav-label">${esc(s.dataset.sectionTitle||'')}</span></button>`;
         }).join('');
         navList.querySelectorAll('.nav-item').forEach(btn => {
             btn.addEventListener('click', () => { activate(btn.dataset.target); if (window.innerWidth <= 900) closeMobileNav(); });
@@ -1482,7 +1275,7 @@ window.CHQ = window.CHQ || {};
         const sections = getSections();
         const idx = sections.findIndex(s => s.dataset.sectionId === activeId);
         if (idx >= 0 && idx < sections.length - 1) activate(sections[idx+1].dataset.sectionId);
-        else if (idx === sections.length - 1) window.CHQ.showToast('✅ All sections visited — click DOCX to export.', 4000);
+        else if (idx === sections.length - 1) window.CHQ.showToast('✅ All sections visited — Export CSV or DOCX to finish.', 4000);
     }
     function prev() {
         const sections = getSections();
@@ -1499,29 +1292,26 @@ window.CHQ = window.CHQ || {};
         if (!prevBtn || !nextBtn || !label) return;
         prevBtn.disabled = idx <= 0;
         if (idx >= 0 && idx < sections.length - 1) {
-            label.textContent = `Proceed to ${sections[idx+1].dataset.sectionTitle || 'next'}`;
+            label.textContent = `Proceed to ${sections[idx+1].dataset.sectionTitle||'next'}`;
             nextBtn.classList.remove('complete'); nextBtn.textContent = '→';
         } else {
-            label.textContent = 'All sections complete — Export DOCX';
+            label.textContent = 'All sections complete';
             nextBtn.classList.add('complete'); nextBtn.textContent = '✓';
         }
     }
 
     function isSectionFilled(section) {
         const inputs = section.querySelectorAll('input[type="text"], input[type="number"], input[type="date"], textarea');
-        for (const el of inputs) if (el.value && el.value.trim() !== '') return true;
-        if (section.querySelector('.chip-group input:checked')) return true;
-        return false;
+        for (const el of inputs) if (el.value && el.value.trim()) return true;
+        return !!section.querySelector('.chip-group input:checked');
     }
 
     function refreshProgress() {
         const sections = getSections();
         let filled = 0;
         sections.forEach(s => {
-            const isFilled = isSectionFilled(s);
-            if (isFilled) filled++;
-            const navBtn = document.querySelector(`.nav-item[data-target="${s.dataset.sectionId}"]`);
-            if (navBtn) navBtn.classList.toggle('filled', isFilled);
+            const f = isSectionFilled(s); if (f) filled++;
+            document.querySelector(`.nav-item[data-target="${s.dataset.sectionId}"]`)?.classList.toggle('filled', f);
         });
         const pct = sections.length ? Math.round((filled / sections.length) * 100) : 0;
         const fill = document.getElementById('navProgressFill');
@@ -1532,7 +1322,7 @@ window.CHQ = window.CHQ || {};
 
     function toggleSidebarCollapse() {
         const isCollapsed = document.documentElement.classList.toggle('guided-sb-collapsed');
-        setPref('chq:sidebar:v1', isCollapsed ? 'collapsed' : 'expanded');
+        CHQ.storage.setPref('chq:sidebar:v1', isCollapsed ? 'collapsed' : 'expanded');
     }
     function openMobileNav() { document.documentElement.classList.add('nav-mobile-open'); }
     function closeMobileNav() { document.documentElement.classList.remove('nav-mobile-open'); }
@@ -1550,33 +1340,25 @@ window.CHQ = window.CHQ || {};
     }
 
     function toggleMode() {
-        const current = document.documentElement.getAttribute('data-ui') || 'classic';
-        const next = current === 'guided' ? 'classic' : 'guided';
+        const next = document.documentElement.getAttribute('data-ui') === 'guided' ? 'classic' : 'guided';
         applyMode(next); setPref(UI_KEY, next);
         if (next === 'guided') window.CHQ.showToast('Guided mode active. Your data is untouched.', 3000);
     }
 
     function init() {
         buildNav(); ensureStepMeta();
-        const sbState = getPref('chq:sidebar:v1', 'expanded');
-        if (sbState === 'collapsed') document.documentElement.classList.add('guided-sb-collapsed');
+        if (CHQ.storage.getPref('chq:sidebar:v1', 'expanded') === 'collapsed')
+            document.documentElement.classList.add('guided-sb-collapsed');
         applyMode(getPref(UI_KEY, 'classic'));
-        const uiBtn = document.getElementById('uiToggleBtn');
-        if (uiBtn) uiBtn.addEventListener('click', toggleMode);
-        const collapseBtn = document.getElementById('navCollapseBtn');
-        if (collapseBtn) collapseBtn.addEventListener('click', toggleSidebarCollapse);
-        const printBtn = document.getElementById('sidebarPrintBtn');
-        if (printBtn) printBtn.addEventListener('click', () => window.print());
-        const resetBtn = document.getElementById('sidebarResetBtn');
-        if (resetBtn) resetBtn.addEventListener('click', () => window.CHQ.reset());
-        const mobBtn = document.getElementById('mobileMenuBtn');
-        if (mobBtn) mobBtn.addEventListener('click', openMobileNav);
-        const backdrop = document.getElementById('navBackdrop');
-        if (backdrop) backdrop.addEventListener('click', closeMobileNav);
-        const gPrev = document.getElementById('guidedPrevBtn');
-        const gNext = document.getElementById('guidedNextBtn');
-        if (gPrev) gPrev.addEventListener('click', prev);
-        if (gNext) gNext.addEventListener('click', next);
+        document.getElementById('uiToggleBtn')?.addEventListener('click', toggleMode);
+        document.getElementById('navCollapseBtn')?.addEventListener('click', toggleSidebarCollapse);
+        document.getElementById('sidebarPrintBtn')?.addEventListener('click', () => window.print());
+        document.getElementById('sidebarResetBtn')?.addEventListener('click', () => window.CHQ.reset());
+        document.getElementById('sidebarCsvBtn')?.addEventListener('click', () => window.CHQ.csv.generate());
+        document.getElementById('mobileMenuBtn')?.addEventListener('click', openMobileNav);
+        document.getElementById('navBackdrop')?.addEventListener('click', closeMobileNav);
+        document.getElementById('guidedPrevBtn')?.addEventListener('click', prev);
+        document.getElementById('guidedNextBtn')?.addEventListener('click', next);
         document.addEventListener('keydown', e => {
             if (document.documentElement.getAttribute('data-ui') !== 'guided') return;
             const tag = (e.target.tagName || '').toLowerCase();
@@ -1601,7 +1383,7 @@ window.CHQ = window.CHQ || {};
         clearTimeout(toastTimer);
         toastTimer = setTimeout(() => el.classList.remove('show'), duration);
     }
-    function hideToast() { const el = document.getElementById('toast'); if (el) el.classList.remove('show'); clearTimeout(toastTimer); }
+    function hideToast() { document.getElementById('toast')?.classList.remove('show'); clearTimeout(toastTimer); }
     window.CHQ.showToast = showToast;
     window.CHQ.hideToast = hideToast;
 
@@ -1623,6 +1405,16 @@ window.CHQ = window.CHQ || {};
         if (tbM) tbM.innerHTML = mchRows.map((label, i) => `<tr><td class="row-label">${label}</td><td><input id="mch${i}" placeholder="n / %" /></td></tr>`).join('');
     }
 
+    function injectSectionNotes() {
+        document.querySelectorAll('.form-section[data-section-id]').forEach(sec => {
+            const id = sec.dataset.sectionId;
+            const wrap = document.createElement('div');
+            wrap.className = 'section-notes';
+            wrap.innerHTML = `<div class="section-notes-label">Notes / Observations</div><textarea id="notes_${id}" rows="2" placeholder="Additional notes, observations, or clarifications…"></textarea>`;
+            sec.appendChild(wrap);
+        });
+    }
+
     let saveIndicatorTimer = null;
     function flashSaveIndicator() {
         const pill = document.getElementById('savePill');
@@ -1638,7 +1430,7 @@ window.CHQ = window.CHQ || {};
         clearTimeout(saveTimer);
         saveTimer = setTimeout(() => {
             window.CHQ.storage.saveNow(); flashSaveIndicator();
-            window.CHQ.ui && window.CHQ.ui.refreshProgress();
+            window.CHQ.ui?.refreshProgress();
         }, 300);
     }
     window.CHQ.onChange = scheduleSave;
@@ -1649,13 +1441,12 @@ window.CHQ = window.CHQ || {};
             if (el.type === 'checkbox' || el.type === 'radio') el.checked = false;
             else el.value = '';
         });
-        // Re-fill the pre-filled health center field
-        const fCenter = document.getElementById('fCenter');
-        if (fCenter) fCenter.value = 'Brgy. Abilan Health Center';
+        const fc = document.getElementById('fCenter');
+        if (fc) fc.value = 'Brgy. Abilan Health Center';
         window.CHQ.storage.clear();
         const first = document.querySelector('.form-section[data-section-id]');
         if (first && window.CHQ.ui) window.CHQ.ui.activate(first.dataset.sectionId);
-        window.CHQ.ui && window.CHQ.ui.refreshProgress();
+        window.CHQ.ui?.refreshProgress();
         showToast('Form reset. Local cache cleared.');
     }
     window.CHQ.reset = resetForm;
@@ -1675,6 +1466,7 @@ window.CHQ = window.CHQ || {};
 
     function boot() {
         buildStaticTables();
+        injectSectionNotes();
         window.CHQ.theme.init();
         window.CHQ.ui.init();
         const cached = window.CHQ.storage.load();
@@ -1690,7 +1482,7 @@ window.CHQ = window.CHQ || {};
 
 (function () {
     function esc(str) {
-        return String(str == null ? '' : str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&apos;');
+        return String(str==null?'':str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&apos;');
     }
     function heading(text) {
         return `<w:p><w:pPr><w:spacing w:before="280" w:after="120"/><w:rPr><w:b/><w:color w:val="A13D2C"/><w:sz w:val="28"/></w:rPr></w:pPr><w:r><w:rPr><w:b/><w:color w:val="A13D2C"/><w:sz w:val="28"/></w:rPr><w:t xml:space="preserve">${esc(text)}</w:t></w:r></w:p>`;
@@ -1704,6 +1496,10 @@ window.CHQ = window.CHQ || {};
             if (i < lines.length - 1) runs += `<w:br/>`;
         });
         return `<w:p><w:pPr><w:spacing w:after="80"/></w:pPr>${runs}</w:p>`;
+    }
+    function noteField(text) {
+        if (!text || !text.trim()) return '';
+        return field('Notes / Observations', text);
     }
     function title(text) {
         return `<w:p><w:pPr><w:spacing w:after="200"/><w:jc w:val="center"/><w:rPr><w:b/><w:color w:val="0A0E1A"/><w:sz w:val="36"/></w:rPr></w:pPr><w:r><w:rPr><w:b/><w:color w:val="0A0E1A"/><w:sz w:val="36"/></w:rPr><w:t xml:space="preserve">${esc(text)}</w:t></w:r></w:p>`;
@@ -1721,7 +1517,7 @@ window.CHQ = window.CHQ || {};
     }
 
     async function generate(ev) {
-        const btn = ev && ev.currentTarget ? ev.currentTarget : null;
+        const btn = ev?.currentTarget || null;
         const original = btn ? btn.innerHTML : null;
         if (btn) { btn.classList.add('loading'); btn.innerHTML = '<span class="spinner"></span>Generating…'; }
         try {
@@ -1735,40 +1531,45 @@ window.CHQ = window.CHQ || {};
             body += field('Purok / Sitio Covered', data.fPurok);
             body += field('Respondent / Position', chipDisplay(data, 'respondent'));
             body += field('Date / Period Covered', data.fPeriod);
+            body += noteField(data.notes_s0);
 
             body += heading('I. Community Profile');
             PROFILE_ROWS.forEach((label, i) => { body += field(label, data['prof' + i]); });
             body += field('Vulnerable groups', chipDisplay(data, 'vulnerableGroups'));
+            body += noteField(data.notes_s1);
 
             body += heading('II. General Health Status');
             for (let i = 1; i <= 5; i++) body += field(`Rank ${i}`, `${data['gh' + i] || '—'}  (${data['gh' + i + 'n'] || '—'})`);
             body += field('Trend vs. previous year', chipDisplay(data, 'ghTrend'));
             body += field('Affects greatest number of people', data.ghMost);
             body += field('Most serious problem', data.ghSerious);
+            body += noteField(data.notes_s2);
 
             body += heading('III. Communicable Diseases');
             COMM_ROWS.forEach((label, i) => {
-                const c = data['comm' + i + '_cases'] || '—';
-                const inc = document.querySelector(`input[name="comm${i}_trend"][value="Increasing"]`)?.checked ? 'Increasing' : '';
-                const dec = document.querySelector(`input[name="comm${i}_trend"][value="Decreasing"]`)?.checked ? 'Decreasing' : '';
-                body += field(label, `Cases: ${c} | ${inc || dec || '—'}`);
+                const trend = data[`comm${i}_trend`] || '—';
+                body += field(label, `Cases: ${data['comm' + i + '_cases'] || '—'} | Trend: ${trend}`);
             });
             body += field('Outbreak or unusual increase?', chipDisplay(data, 'outbreak'));
             body += field('If yes, specify', data.outbreakDetail);
+            body += noteField(data.notes_s3);
 
             body += heading('IV. Noncommunicable Diseases');
             NCD_ROWS.forEach((c, i) => { body += field(c, data['ncd' + i]); });
             body += field('Biggest NCD concern', data.ncdConcern);
             body += field('Screening services available', chipDisplay(data, 'ncdScreening'));
             body += field('Common risk factors', chipDisplay(data, 'ncdRisk'));
+            body += noteField(data.notes_s4);
 
             body += heading('V. Maternal & Child Health');
             MCH_ROWS.forEach((label, i) => { body += field(label, data['mch' + i]); });
             body += field('Common maternal/child health concerns', chipDisplay(data, 'mchConcerns'));
+            body += noteField(data.notes_s5);
 
             body += heading('VI. Immunization');
             body += field('Immunization status of children', chipDisplay(data, 'immStatus'));
             body += field('Reasons for missed vaccinations', chipDisplay(data, 'immMissed'));
+            body += noteField(data.notes_s6);
 
             body += heading('VII. Nutrition');
             body += field('Nutrition problems present', chipDisplay(data, 'nutProblems'));
@@ -1778,28 +1579,33 @@ window.CHQ = window.CHQ || {};
             body += field('Overweight/obese (n)', data.nutOver);
             body += field('Nutrition programs available', chipDisplay(data, 'nutPrograms'));
             body += field('Major nutrition concern', data.nutConcern);
+            body += noteField(data.notes_s7);
 
             body += heading('VIII. Water, Sanitation & Environment');
             body += field('Main water sources', chipDisplay(data, 'waterSources'));
             body += field('Major environmental concerns', chipDisplay(data, 'envConcerns'));
             body += field('Most concerning environmental problem', data.envMost);
             body += field('Environmental health programs implemented?', chipDisplay(data, 'envPrograms'));
+            body += noteField(data.notes_s8);
 
             body += heading('IX. Mental & Social Health');
             body += field('Mental/social concerns observed', chipDisplay(data, 'mentalConcerns'));
             body += field('Mental health services available', chipDisplay(data, 'mentalServices'));
             body += field('Major mental/social health concern', data.mentalMajor);
+            body += noteField(data.notes_s9);
 
             body += heading('X. Health Services & Resources');
             body += field('Services available', chipDisplay(data, 'servicesAvail'));
             body += field('Health personnel available', data.personnel);
             body += field('Resources lacking', chipDisplay(data, 'resourcesLacking'));
+            body += noteField(data.notes_s10);
 
             body += heading('XI. Access to Healthcare');
             body += field('Barriers to healthcare', chipDisplay(data, 'barriers'));
             body += field('Referrals to other facilities?', chipDisplay(data, 'referrals'));
             body += field('If yes, common reasons', data.referralReasons);
             body += field('Health services still needed', data.neededServices);
+            body += noteField(data.notes_s11);
 
             body += heading('XII. Community Health Priorities');
             body += field('Three most important health problems', data.top3);
@@ -1809,6 +1615,7 @@ window.CHQ = window.CHQ || {};
             body += field('Urgent community concern', data.mostUrgent);
             body += field('Requires most additional resources', data.mostResource);
             body += field('Additional notes / observations', data.additionalNotes);
+            body += noteField(data.notes_s12);
 
             const documentXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">\n<w:body>${body}<w:sectPr><w:pgSz w:w="12240" w:h="15840"/><w:pgMar w:top="1080" w:right="1080" w:bottom="1080" w:left="1080"/></w:sectPr></w:body>\n</w:document>`;
             const stylesXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<w:styles xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">\n<w:docDefaults><w:rPrDefault><w:rPr><w:rFonts w:ascii="Calibri" w:hAnsi="Calibri"/><w:sz w:val="22"/></w:rPr></w:rPrDefault></w:docDefaults>\n<w:style w:type="paragraph" w:default="1" w:styleId="Normal"><w:name w:val="Normal"/></w:style>\n</w:styles>`;
@@ -1827,8 +1634,7 @@ window.CHQ = window.CHQ || {};
             const blob = await zip.generateAsync({ type: 'blob', mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
-            a.href = url;
-            a.download = 'AbHC_CHQ.docx';
+            a.href = url; a.download = 'AbHC_CHQ.docx';
             document.body.appendChild(a); a.click(); a.remove();
             URL.revokeObjectURL(url);
             window.CHQ.showToast('DOCX generated ✓');
@@ -1841,6 +1647,332 @@ window.CHQ = window.CHQ || {};
     }
 
     window.CHQ.docx = { generate };
+})();
+
+(function () {
+    const FORM_VERSION = '1.0';
+
+    const HEADERS = [
+        'exported_at','form_version',
+        'fCenter','fPurok','respondent','fPeriod',
+        'prof0','prof1','prof2','prof3','prof4','prof5','prof6','prof7','prof8','prof9','vulnerableGroups',
+        'gh1','gh1n','gh2','gh2n','gh3','gh3n','gh4','gh4n','gh5','gh5n','ghTrend','ghMost','ghSerious',
+        'comm0_cases','comm0_trend','comm1_cases','comm1_trend','comm2_cases','comm2_trend',
+        'comm3_cases','comm3_trend','comm4_cases','comm4_trend','outbreak','outbreakDetail',
+        'ncd0','ncd1','ncd2','ncd3','ncd4','ncd5','ncd6','ncd7','ncdConcern','ncdScreening','ncdRisk',
+        'mch0','mch1','mch2','mch3','mch4','mch5','mch6','mch7','mch8','mchConcerns',
+        'immStatus','immMissed',
+        'nutProblems','nutUnder','nutWasted','nutStunted','nutOver','nutPrograms','nutConcern',
+        'waterSources','envConcerns','envMost','envPrograms',
+        'mentalConcerns','mentalServices','mentalMajor',
+        'servicesAvail','personnel','resourcesLacking',
+        'barriers','referrals','referralReasons','neededServices',
+        'top3','affectsMost','mostModifiable','mostPreventable','mostUrgent','mostResource','additionalNotes',
+        'notes_s0','notes_s1','notes_s2','notes_s3','notes_s4','notes_s5','notes_s6',
+        'notes_s7','notes_s8','notes_s9','notes_s10','notes_s11','notes_s12',
+        'scratchpad'
+    ];
+
+    const CHIP_MULTI = new Set([
+        'respondent','vulnerableGroups','ghTrend','mchConcerns','immMissed',
+        'nutProblems','nutPrograms','waterSources','envConcerns','envPrograms',
+        'mentalConcerns','mentalServices','ncdScreening','ncdRisk','servicesAvail',
+        'resourcesLacking','barriers','referrals','outbreak'
+    ]);
+
+    function escapeCell(val) {
+        if (val == null) return '';
+        const s = String(val).replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+        if (s.includes(',') || s.includes('"') || s.includes('\n')) {
+            return '"' + s.replace(/"/g, '""') + '"';
+        }
+        return s;
+    }
+
+    function buildRow() {
+        const data = window.CHQ.storage.serialize();
+        const scratch = (() => { try { return localStorage.getItem(window.CHQ.storage.SCRATCH_KEY) || ''; } catch { return ''; } })();
+
+        function chipSemi(field) {
+            const vals = Array.isArray(data[field]) ? data[field].slice() : [];
+            const other = (data[field + '__other'] || '').trim();
+            return vals.map(v => v === 'Other' && other ? `Other: ${other}` : v).join('; ');
+        }
+
+        const now = new Date();
+        const offset = '+08:00';
+        const pad = n => String(n).padStart(2, '0');
+        const exported_at = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}T${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}${offset}`;
+
+        const row = {};
+        row.exported_at = exported_at;
+        row.form_version = FORM_VERSION;
+
+        ['fCenter','fPurok','fPeriod',
+         'gh1','gh1n','gh2','gh2n','gh3','gh3n','gh4','gh4n','gh5','gh5n','ghMost','ghSerious',
+         'outbreakDetail','ncdConcern',
+         'nutUnder','nutWasted','nutStunted','nutOver','nutConcern',
+         'envMost','mentalMajor','personnel','referralReasons','neededServices',
+         'top3','affectsMost','mostModifiable','mostPreventable','mostUrgent','mostResource','additionalNotes',
+         'notes_s0','notes_s1','notes_s2','notes_s3','notes_s4','notes_s5','notes_s6',
+         'notes_s7','notes_s8','notes_s9','notes_s10','notes_s11','notes_s12'
+        ].forEach(k => { row[k] = data[k] || ''; });
+
+        for (let i = 0; i < 10; i++) row[`prof${i}`] = data[`prof${i}`] || '';
+        for (let i = 0; i < 5; i++) {
+            row[`comm${i}_cases`] = data[`comm${i}_cases`] || '';
+            row[`comm${i}_trend`] = data[`comm${i}_trend`] || '';
+        }
+        for (let i = 0; i < 8; i++) row[`ncd${i}`] = data[`ncd${i}`] || '';
+        for (let i = 0; i < 9; i++) row[`mch${i}`] = data[`mch${i}`] || '';
+
+        CHIP_MULTI.forEach(f => { row[f] = chipSemi(f); });
+        row.scratchpad = scratch;
+
+        return HEADERS.map(h => escapeCell(row[h])).join(',');
+    }
+
+    function generate(templateOnly = false) {
+        try {
+            const header = HEADERS.join(',');
+            const csv = '\uFEFF' + (templateOnly ? header : header + '\n' + buildRow());
+
+            const data = window.CHQ.storage.serialize();
+            const respRaw = Array.isArray(data.respondent) ? data.respondent : [];
+            const submitterId = respRaw.length ? respRaw.join('-').replace(/[^a-zA-Z0-9-]/g, '') : 'unnamed';
+            const today = new Date();
+            const dateStr = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+            const filename = templateOnly ? 'AbHC_CHQ_TEMPLATE.csv' : `AbHC_CHQ_${submitterId}_${dateStr}.csv`;
+
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url; a.download = filename;
+            document.body.appendChild(a); a.click(); a.remove();
+            URL.revokeObjectURL(url);
+            window.CHQ.showToast(templateOnly ? 'CSV template downloaded ✓' : 'CSV exported ✓');
+        } catch (err) {
+            console.error(err);
+            window.CHQ.showToast('CSV error: ' + err.message);
+        }
+    }
+
+    window.CHQ.csv = { generate, generateTemplate: () => generate(true), HEADERS };
+})();
+
+(function () {
+    const { getPref, setPref, SCRATCH_KEY } = window.CHQ.storage;
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    let recognition = null;
+    let listening = false;
+    let userStopped = false;
+    let panelOpen = false;
+    let lastFocusedField = null;
+
+    const fabBtn = document.getElementById('voiceFabBtn');
+    const panel  = document.getElementById('voicePanel');
+    const closeBtn = document.getElementById('closePanelBtn');
+    const transcript = document.getElementById('voiceTranscript');
+    const scratchpad = document.getElementById('voiceScratchpad');
+    const counter = document.getElementById('scratchCounter');
+    const statusDot = document.getElementById('voiceStatusDot');
+    const toggleBtn = document.getElementById('voiceToggleBtn');
+    const toFieldBtn = document.getElementById('voiceToFieldBtn');
+    const copyBtn = document.getElementById('voiceCopyBtn');
+    const clearBtn = document.getElementById('voiceClearBtn');
+
+    try { scratchpad.value = localStorage.getItem(SCRATCH_KEY) || ''; } catch {}
+    function updateCounter() { counter.textContent = scratchpad.value.length; }
+    updateCounter();
+
+    function saveScratch() {
+        try { localStorage.setItem(SCRATCH_KEY, scratchpad.value); } catch {}
+        updateCounter();
+    }
+    scratchpad.addEventListener('input', saveScratch);
+
+    function openPanel() { panelOpen = true; panel.classList.add('open'); }
+    function closePanel() { panelOpen = false; panel.classList.remove('open'); }
+    function togglePanel() { panelOpen ? closePanel() : openPanel(); }
+
+    fabBtn.addEventListener('click', togglePanel);
+    closeBtn.addEventListener('click', closePanel);
+
+    document.getElementById('chForm')?.addEventListener('focusin', e => {
+        const t = e.target;
+        if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA') && !t.classList.contains('chip-other-input')) {
+            lastFocusedField = t;
+        }
+    }, true);
+
+    if (!SpeechRecognition) {
+        fabBtn.classList.add('disabled-mic');
+        fabBtn.title = 'Voice input not supported in this browser (use Chrome or Edge)';
+        if (toggleBtn) { toggleBtn.disabled = true; toggleBtn.title = 'Not supported in Firefox'; toggleBtn.textContent = '🚫 No mic'; }
+    } else {
+        recognition = new SpeechRecognition();
+        recognition.continuous = true;
+        recognition.interimResults = true;
+        recognition.lang = navigator.language || 'en-PH';
+
+        recognition.onresult = (e) => {
+            let interim = '', final = '';
+            for (let i = e.resultIndex; i < e.results.length; i++) {
+                const t = e.results[i][0].transcript;
+                if (e.results[i].isFinal) final += t;
+                else interim += t;
+            }
+            if (transcript) transcript.innerHTML = `<span>${escTxt(final)}</span><span class="interim">${escTxt(interim)}</span>`;
+            if (final.trim()) processVoiceCommand(final.trim());
+        };
+
+        recognition.onerror = (e) => {
+            if (e.error !== 'no-speech') window.CHQ.showToast('Mic error: ' + e.error);
+        };
+
+        recognition.onend = () => {
+            if (listening && !userStopped) {
+                try { recognition.start(); } catch {}
+            } else {
+                listening = false;
+                fabBtn.classList.remove('listening');
+                statusDot.classList.remove('active');
+                if (toggleBtn) toggleBtn.textContent = '🎙 Start';
+            }
+        };
+    }
+
+    function escTxt(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+    function startListening() {
+        if (!recognition) return;
+        userStopped = false; listening = true;
+        try { recognition.start(); } catch {}
+        fabBtn.classList.add('listening');
+        statusDot.classList.add('active');
+        if (toggleBtn) toggleBtn.textContent = '⏹ Stop';
+        if (!panelOpen) openPanel();
+    }
+
+    function stopListening() {
+        if (!recognition) return;
+        userStopped = true; listening = false;
+        try { recognition.stop(); } catch {}
+        fabBtn.classList.remove('listening');
+        statusDot.classList.remove('active');
+        if (toggleBtn) toggleBtn.textContent = '🎙 Start';
+    }
+
+    function toggleListening() { listening ? stopListening() : startListening(); }
+    if (toggleBtn) toggleBtn.addEventListener('click', toggleListening);
+
+    document.addEventListener('keydown', e => {
+        if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'M') { e.preventDefault(); toggleListening(); }
+        if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'N') { e.preventDefault(); togglePanel(); }
+    });
+
+    if (toFieldBtn) toFieldBtn.addEventListener('click', () => {
+        if (!lastFocusedField || !document.getElementById('chForm')?.contains(lastFocusedField)) {
+            window.CHQ.showToast('Click into a form field first, then press ↳ To field');
+            return;
+        }
+        const text = scratchpad.value.trim();
+        if (!text) { window.CHQ.showToast('Scratchpad is empty'); return; }
+        lastFocusedField.value = (lastFocusedField.value ? lastFocusedField.value + '\n' : '') + text;
+        lastFocusedField.dispatchEvent(new Event('input', { bubbles: true }));
+        window.CHQ.showToast('Appended to field ✓');
+    });
+
+    if (copyBtn) copyBtn.addEventListener('click', () => {
+        if (!scratchpad.value) { window.CHQ.showToast('Nothing to copy'); return; }
+        navigator.clipboard?.writeText(scratchpad.value).then(() => window.CHQ.showToast('Copied ✓'))
+            .catch(() => { scratchpad.select(); document.execCommand('copy'); window.CHQ.showToast('Copied ✓'); });
+    });
+
+    if (clearBtn) clearBtn.addEventListener('click', () => {
+        if (!scratchpad.value || confirm('Clear scratchpad?')) {
+            scratchpad.value = ''; saveScratch();
+            if (transcript) transcript.innerHTML = '<span style="color:var(--text3);font-style:italic;">Transcript will appear here…</span>';
+        }
+    });
+
+    function processVoiceCommand(text) {
+        const lower = text.toLowerCase().trim();
+
+        const navMatch = lower.match(/^(?:go to|open|show|navigate to)\s+(.+)$/i);
+        if (navMatch) {
+            const target = navMatch[1].toLowerCase();
+            const sections = Array.from(document.querySelectorAll('.form-section[data-section-id]'));
+            const found = sections.find(s => (s.dataset.sectionTitle || '').toLowerCase().includes(target));
+            if (found) { window.CHQ.ui.activate(found.dataset.sectionId); window.CHQ.showToast(`Navigated to ${found.dataset.sectionTitle}`); }
+            else window.CHQ.showToast(`Section not found: "${navMatch[1]}"`);
+            return;
+        }
+
+        const noteMatch = lower.match(/^(?:note|add note)\s+(.+)$/i);
+        if (noteMatch) {
+            const noteText = text.replace(/^(?:note|add note)\s+/i, '');
+            scratchpad.value = (scratchpad.value ? scratchpad.value + '\n' : '') + noteText;
+            saveScratch();
+            return;
+        }
+
+        const setPatterns = [
+            /^(?:set|fill)\s+(.+?)\s+(?:to|with)\s+(.+)$/i,
+            /^(.+?)\s+is\s+(.+)$/i,
+            /^(.+?)\s*=\s*(.+)$/i,
+            /^(.+?):\s+(.+)$/i
+        ];
+        for (const pat of setPatterns) {
+            const m = text.match(pat);
+            if (m) {
+                const fieldName = m[1].trim();
+                const value = m[2].trim();
+                const el = findField(fieldName);
+                if (el) {
+                    el.value = value;
+                    el.dispatchEvent(new Event('input', { bubbles: true }));
+                    el.classList.add('field-flash');
+                    el.addEventListener('animationend', () => el.classList.remove('field-flash'), { once: true });
+                    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    window.CHQ.showToast(`Set "${fieldName}" ✓`);
+                    return;
+                }
+            }
+        }
+
+        scratchpad.value = (scratchpad.value ? scratchpad.value + '\n' : '') + text;
+        saveScratch();
+    }
+
+    function findField(query) {
+        const q = query.toLowerCase().trim();
+        const inputs = Array.from(document.querySelectorAll('#chForm input[type="text"], #chForm input[type="number"], #chForm textarea'));
+
+        let found = inputs.find(el => (el.placeholder || '').toLowerCase().trim() === q);
+        if (found) return found;
+
+        found = inputs.find(el => {
+            const ph = (el.placeholder || '').toLowerCase();
+            return ph.includes(q) || q.includes(ph);
+        });
+        if (found) return found;
+
+        const labeled = inputs.map(el => {
+            const row = el.closest('tr');
+            const labelCell = row?.querySelector('.row-label');
+            const labelEl = el.closest('.form-group')?.querySelector('label');
+            const text = (labelCell?.textContent || labelEl?.textContent || '').toLowerCase().trim();
+            return { el, text };
+        }).filter(({ text }) => text && text.includes(q));
+        if (labeled.length) {
+            labeled.sort((a, b) => a.text.length - b.text.length);
+            return labeled[0].el;
+        }
+        return null;
+    }
+
+    window.CHQ.voice = { startListening, stopListening, toggleListening, openPanel, closePanel, togglePanel };
 })();
 </script>
 </body>
